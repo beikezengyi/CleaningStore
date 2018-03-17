@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>订单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="stylesheet" type="text/css"
+	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<link rel="stylesheet" th:href="@{/css/main.css}"
+	href="../../css/main.css" />
+
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Spring Boot</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">首页</a></li>
+					<li><a href="#about">About</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<div class="table-responsive">
+			<h1>订单一览</h1>
+			<table id="ordertable" class="table table-bordered table-striped">
+				<tr >
+					<td>选择</td>
+					<td>订单号码</td>
+					<td>物品件数</td>
+					<td>下单日期</td>
+					<td>顾客姓名</td>
+					<td>电话号码</td>
+					<td>接单店铺</td>
+					<td>別名</td>
+					<td>明细</td>
+					<td>洗衣途径</td>
+					<td>期望日</td>
+					<td>取件日</td>
+					<td>价格</td>
+					<td>管理号码</td>
+					<td>上门服务</td>
+					<td>已删除</td>
+					<td>删除日期</td>
+					<td>已完成</td>
+					<td>完成日期</td>
+				</tr>
+				<tr th:each="order : ${orderResultList}">
+					<td><input id="selectorder" name="selectorder" type="checkbox" /></td>
+					<td th:text="${order.orderNumber}" />
+					<td th:text="${order.cleanThingDetailsNumber}" />
+					<td th:text="${order.createDate}" />
+					<td th:text="${order.customerName}" />
+					<td th:text="${order.customerPhoneNumber}" />
+					<td th:text="${order.storeName}" />
+					<td th:text="${order.otherName}" />
+					<td th:text="${order.washCountWashUnitThingNumber}" />
+					<td th:text="${order.washWayName}" />
+					<td th:text="${order.expectedDate}" />
+					<td th:text="${order.realDate}" />
+					<td th:text="${order.thingPrice}" />
+					<td th:text="${order.managementNumber}" />
+					<td th:text="${order.visitOrder}" />
+					<td th:text="${order.deletedFlg}" />
+					<td th:text="${order.deletedDate}" />
+					<td th:text="${order.finishFlg}" />
+					<td th:text="${order.finishDate}" />
+				</tr>
+			</table>
+		</div>
+
+	</div>
+	<!-- /.container -->
+
+	<script type="text/javascript"
+		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>
