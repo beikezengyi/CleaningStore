@@ -1,7 +1,5 @@
 package com.cleaningstore.web.bean.condition;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,8 +17,12 @@ public class SelectOrderCondition {
 	
 	private String managementNumber;
 	
-	private Date createDateStart;
+//	private Date createDateStart;
+//	
+//	private Date createDateEnd;
 	
-	private Date createDateEnd;
+	private String createDateStart;
+	
+	private String createDateEnd;	
 
 }

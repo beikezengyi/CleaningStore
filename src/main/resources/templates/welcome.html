@@ -5,6 +5,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script
 	src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="../../js/welcome.js"></script>
+
 <link rel="stylesheet" type="text/css"
 	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
 
@@ -13,7 +15,7 @@
 
 </head>
 <body>
-	<object type="text/html" data="header.html"></object>
+
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h4 class="panel-title">
@@ -23,9 +25,8 @@
 		</div>
 		<div id="collapseOne" class="panel-collapse collapse">
 			<div class="panel-body">
-
-				<button type="submit" class="btn btn-info">订单查询</button>
-				<button type="submit" class="btn btn-info">新建订单</button>
+				<button type="submit" class="btn btn-info" onclick="order()">订单查询</button>
+				<button type="submit" class="btn btn-info" onclick="createOrder()">新建订单</button>
 			</div>
 		</div>
 	</div>
