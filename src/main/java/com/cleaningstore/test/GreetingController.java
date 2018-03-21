@@ -19,5 +19,15 @@ public class GreetingController {
     public String greetingSubmit(@ModelAttribute Greeting greeting) {
         return "result";
     }
+    
+    @GetMapping("/popup")
+    public String popup() {
+        return "sub";
+    }  
+    
+    @GetMapping("/sub2")
+    public String sub2() {
+        return "sub2";
+    }      
 
 }

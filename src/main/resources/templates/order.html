@@ -10,6 +10,12 @@
 <link rel="stylesheet" th:href="@{/css/main.css}"
 	href="../../css/main.css" />
 
+<script type="text/javascript">
+function goOrderDetails(ordernumber){
+	var linkadd="/orderDetails?ordernumber="+ordernumber;
+	window.location.href=linkadd;
+}
+</script>
 </head>
 <body>
 
@@ -28,30 +34,39 @@
 
 	<form action="#" th:action="@{/order}" th:object="${cond}"
 		method="post">
-		<p>
-			顾客姓名:<input type="text" th:field="*{customerName}"
+		<div class="center">
+			<span> 顾　　客　　姓　名:<input type="text" th:field="*{customerName}"
 				name="customerName" />
-		</p>
-		<p>
-			顾客电话:<input type="text" th:field="*{customerPhoneNumber}"
-				name="customerPhoneNumber" />
-		</p>
-		<p>
-			别 名:<input type="text" th:field="*{otherName}" name="otherName" />
-		</p>
-		<p>
-			管理番号:<input type="text" th:field="*{managementNumber}"
-				name="managementNumber" />
-		</p>
-		<p>
-			检索开始日:<input type="date" th:field="*{createDateStart}"
-				name="createDateStart" />
-		</p>
-		<p>
-			检索终了日:<input type="date" th:field="*{createDateEnd}"
-				name="createDateEnd" />
-		</p>
-		<input type="submit" value="用此条件检索" />
+			</span> <span style="float: right;"> 顾客电话:<input type="text"
+				th:field="*{customerPhoneNumber}" name="customerPhoneNumber" />
+			</span>
+		</div>
+		<div>
+			<span> 别　　　　　　　名:<input type="text" th:field="*{otherName}"
+				name="otherName" />
+			</span> <span style="float: right;"> 管理番号:<input type="text"
+				th:field="*{managementNumber}" name="managementNumber" />
+			</span>
+		</div>
+		<div class="center">
+			<span> 订单创建检索开始日:<input type="date"
+				th:field="*{createOrderDateStart}" name="createOrderDateStart" />
+			</span> <span style="float: right;"> 物件送店检索终了日:<input type="date"
+				th:field="*{createDateEnd}" name="createDateEnd" />
+			</span>
+		</div>
+		<div class="center">
+			<span> 订单创建检索终了日:<input type="date"
+				th:field="*{createOrderDateEnd}" name="createOrderDateEnd" />
+			</span> <span style="float: right;"> 物件送店检索开始日:<input type="date"
+				th:field="*{createDateStart}" name="createDateStart" />
+			</span>
+		</div>
+		<div class="center">
+			<span style="color: #f44242">
+				<input type="submit" value="用此条件检索" />
+			</span>
+		</div>
 	</form>
 
 	<div class="container">
@@ -64,7 +79,8 @@
 					<td>选择</td>
 					<td>订单号码</td>
 					<td>物品件数</td>
-					<td>下单日期</td>
+					<td>创建订单日期</td>
+					<td>物品送店日期</td>
 					<td>顾客姓名</td>
 					<td>电话号码</td>
 					<td>接单店铺</td>
@@ -83,8 +99,9 @@
 				</tr>
 				<tr th:each="order : ${orderResultList}">
 					<td><input id="selectorder" name="selectorder" type="checkbox" /></td>
-					<td th:text="${order.orderNumber}" />
+					<td ><a href="#" th:text="${order.orderNumber}" onclick="goOrderDetails(this.innerText)"></a> </td>
 					<td th:text="${order.cleanThingDetailsNumber}" />
+					<td th:text="${order.orderCreateDate}" />
 					<td th:text="${order.createDate}" />
 					<td th:text="${order.customerName}" />
 					<td th:text="${order.customerPhoneNumber}" />

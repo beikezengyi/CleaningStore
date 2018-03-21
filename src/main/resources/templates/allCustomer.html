@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>检索顾客</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="stylesheet" type="text/css"
+	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<link rel="stylesheet" th:href="@{/css/main.css}"
+	href="../../css/main.css" />
+<script>
+	function selectCustomer(value) {
+		var linkadd="/chooseCustomer/" +value;
+		window.location.href=linkadd;
+	}
+</script>
+</head>
+<body>
+
+	<form action="#" th:action="@{/allCustomer}" th:object="${cond}"
+		method="post">
+		<p>
+			顾客姓名:<input type="text" th:field="*{name}" name="customerName" />
+		</p>
+		<p>
+			顾客电话:<input type="text" th:field="*{number}"
+				name="customerPhoneNumber" />
+		</p>
+		<input type="submit" value="用此条件检索" />
+	</form>
+
+	<div class="container">
+
+		<div class="table-responsive">
+			<h1>顾客一览</h1>
+			<table id="customertable" class="table table-bordered table-striped">
+				<tr>
+					<td>顾客番号</td>
+					<td>顾客名</td>
+					<td>顾客电话</td>
+					<td>顾客性别</td>
+					<td>住址</td>
+					<td>家庭构成人数</td>
+					<td>充值金额</td>
+					<td>账户余额</td>
+				</tr>
+				<tr th:each="cu : ${allCustomer}">
+					<td><a href="#" th:text="${cu.customerNumber}"
+						onclick="selectCustomer(this.innerText)"></a></td>
+					<td th:text="${cu.customerName}"></td>
+					<td th:text="${cu.customerPhoneNumber}" />
+					<td th:text="${cu.customerSex}" />
+					<td th:text="${cu.customerAddress}" />
+					<td th:text="${cu.customerFamilies}" />
+					<td th:text="${cu.accountPayment}" />
+					<td th:text="${cu.accountBalance}" />
+				</tr>
+			</table>
+		</div>
+
+	</div>
+	<!-- /.container -->
+
+	<script type="text/javascript"
+		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

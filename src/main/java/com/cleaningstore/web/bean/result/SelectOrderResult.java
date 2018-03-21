@@ -14,8 +14,11 @@ public class SelectOrderResult {
 	
 	/** 订单内物品件数 */
 	private String cleanThingDetailsNumber;
-
-	/** 下单日期 */
+	
+	/** 订单创建日 */
+	private String orderCreateDate;
+	
+	/** 物品下单日期 */
 	private String createDate;
 
 	/** 下单顾客姓名 */

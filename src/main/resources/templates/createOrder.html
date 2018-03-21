@@ -25,32 +25,30 @@
 			</div>
 		</div>
 	</nav>
-	
-	<div class="seedstarterlist" th:unless="${#lists.isEmpty(inertedBean)}">
+	<!--
+	 <div class="seedstarterlist" th:unless="${#lists.isEmpty(inertedBean)}">
 		<p th:text="{ '订单番号:' + ${inertedBean.orderNumber}}"></p>
 		<p th:text="{ '订单番号:' + ${inertedBean.orderNumber}}"></p>
 		<p th:text="{ '订单番号:' + ${inertedBean.orderNumber}}"></p>
 		<p th:text="{ '订单番号:' + ${inertedBean.orderNumber}}"></p>
 	</div>
-
-	<form action="#" th:action="@{/createOrder}" th:object="${orderBean}"
-		method="post">
+	-->
+	<span id="customerNumber" th:value="${choosedCustomer.customerNumber}"></span>
+	<form id="createform" action="#"
+		th:action="@{/createOrderwithid(id=${choosedCustomer.customerNumber})}"
+		th:object="${orderBean}" method="post">
 		<p>
-			<!--下单顾客番号  -->
-			<input type="hidden" th:field="*{customerNumber}" id="customerNumber"
-				name="customerNumber" />
-		</p>
-		<p>
-			下单顾客姓名:<input type="text" id="customerName" name="customerName" />
-			<img alt="检索" src="../../pic/search.jpg" />
+			下单顾客姓名:<input type="text" id="customerName" name="customerName"
+				readonly="readonly" th:value="${choosedCustomer.customerName}" /> <img
+				alt="检索" src="../../pic/search.jpg" height="20px" width="20px"
+				onclick="search()" />
 		</p>
 		<p></p>
 		<p>
-			接单店铺名:
+			接单店铺名: 
 			<select th:field="*{storeNumber}">
-			  <option th:each="store : ${storeList}" 
-			          th:value="${store.storeNumber}" 
-			          th:text="${store.storeName}"></option>
+				<option th:each="store : ${storeList}"
+					th:value="${store.storeNumber}" th:text="${store.storeName}"></option>
 			</select>
 		</p>
 
@@ -59,6 +57,6 @@
 
 	<script type="text/javascript"
 		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+	<script src="../../js/createOrder.js"></script>
 </body>
 </html>

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>侯姐专业洗涤</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script
+	src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="../../js/welcome.js"></script>
+
+<link rel="stylesheet" type="text/css"
+	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<link rel="stylesheet" th:href="@{/css/main.css}"
+	href="../../css/main.css" />
+
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">侯姐专业洗涤</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="/">首页</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<form action="#" th:action="@{/orderDetails}"
+		th:object="${detailsList}" method="post">
+		<table>
+			<tr th:each="details : ${detailsList}">
+				<td>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h4 class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion"
+									th:href="'#' + ${details.cleanThingDetailsNumber}"
+									th:text="'明细' + ${details.cleanThingDetailsNumber}"></a>
+							</h4>
+						</div>
+						<div th:id="${details.cleanThingDetailsNumber}"
+							class="panel-collapse collapse">
+							<div class="panel-body">
+								<p>
+									<span>订 单 号 码<input type="text" readonly="readonly"
+										th:value="${details.cleanThingNumber}" /></span> <span
+										style="float: right;">订单明细番号<input type="text"
+										readonly="readonly"
+										th:value="${details.cleanThingDetailsNumber}" /></span>
+								</p>
+								<p>
+									<span>下 单 日 期<input type="text" readonly="readonly"
+										th:value="${details.createDate}" /></span> <span
+										style="float: right;">物品别名<input type="text"
+										th:value="${details.otherName}" /></span>
+								</p>
+								<p>
+									<span>洗 衣 件 数<input type="text"
+										th:value="${details.washCount}" /></span> <span
+										style="float: right;">洗衣单位<input type="text"
+										th:value="${details.washUnit}" /></span>
+								</p>
+								<p>
+									<span>物 品 类 型 <select>
+											<option th:each="thing : ${thingList}"
+												th:value="${thing.thingNumber}" th:text="${thing.thingName}"
+												th:selected="${details.thingNumber} == ${thing.thingNumber} ? true : false"></option>
+									</select></span> <span style="float: right;">洗涤方式 <select
+										style="float: right;">
+											<option th:each="washWay : ${washWayList}"
+												th:value="${washWay.washWayNumber}"
+												th:text="${washWay.washWayName}"
+												th:selected="${details.washWayNumber} == ${washWay.washWayNumber} ? true : false"></option>
+									</select></span>
+								</p>
+								<p>
+									<span>期望交付日期<input type="date"
+										th:value="${details.expectedDate}" /></span> <span
+										style="float: right;">实际交付日期<input type="date"
+										th:value="${details.realDate}" /></span>
+								</p>
+								<p>
+									<span>物品价格<input type="text"
+										th:value="${details.thingPrice}" /></span> <span
+										style="float: right;">管理号码/发票号码<input type="text"
+										th:value="${details.managementNumber}" /></span>
+								</p>
+								<p>
+									<span>是否上门取件<input type="text"
+										th:value="${details.visitToGetOrder}" /></span> <span
+										style="float: right;">是否送件上门<input type="text"
+										th:value="${details.visitToPutOrder}" /></span>
+								</p>
+								<p>
+									<span>消除旗帜<input type="text"
+										th:value="${details.deletedFlg}" /></span> <span
+										style="float: right;">消除日期<input type="date"
+										th:value="${details.deletedDate}" /></span>
+								</p>
+								<p>
+									<span>完成旗帜<input type="text"
+										th:value="${details.finishflg}" /></span> <span
+										style="float: right;">完成日期<input type="date"
+										th:value="${details.finishDate}" /></span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<script type="text/javascript"
+		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

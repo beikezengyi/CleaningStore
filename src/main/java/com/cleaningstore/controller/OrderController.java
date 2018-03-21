@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.cleaningstore.jdbc.OrderMapper;
+import com.cleaningstore.jdbc.mapper.OrderMapper;
 import com.cleaningstore.web.bean.condition.SelectOrderCondition;
 import com.cleaningstore.web.bean.result.SelectOrderResult;
 
@@ -25,9 +25,6 @@ public class OrderController {
 		model.put("orderResultList", orderResultList);
 		model.put("orderResultCount", orderResultList.size());
 		SelectOrderCondition cond = new SelectOrderCondition();
-		// LocalDateTime now = LocalDateTime.now();
-		// cond.setCreateDateStart(now.minusDays(10));
-		// cond.setCreateDateEnd(now);
 		model.put("cond", cond);
 		return "order";
 	}
