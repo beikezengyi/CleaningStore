@@ -98,7 +98,8 @@ function goOrderDetails(ordernumber){
 					<td>完成日期</td>
 				</tr>
 				<tr th:each="order : ${orderResultList}">
-					<td><input id="selectorder" name="selectorder" type="checkbox" /></td>
+				
+					<td><input style="width: 20px;" id="selectorder" name="selectorder" type="checkbox" /></td>
 					<td ><a href="#" th:text="${order.orderNumber}" onclick="goOrderDetails(this.innerText)"></a> </td>
 					<td th:text="${order.cleanThingDetailsNumber}" />
 					<td th:text="${order.orderCreateDate}" />

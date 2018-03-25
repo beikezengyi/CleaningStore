@@ -9,10 +9,41 @@
 
 <link rel="stylesheet" type="text/css"
 	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
-
+<link rel="stylesheet" type="text/css"
+	href="webjars/bootstrap-datetimepicker/2.3.5/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" th:href="@{/css/main.css}"
 	href="../../css/main.css" />
+<script type="text/javascript">
+	$(function() {
+		$(".datetimepicker").datetimepicker();
+	});
 
+	function addDetails() {
+		var detailstable = document.getElementById("detailstable");
+		var size = detailstable.rows.length;
+		var oldtr = detailstable.rows[size - 1];
+		var newtr = oldtr.cloneNode(true);
+		var oldStr = "detailsList" + (size - 1)
+		var newStr = "detailsList" + (size)
+		//明细显示
+		newtr.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[1].innerHTML = "明细"
+				+ (size + 1);
+		//地址面
+		newtr.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[1].hash = "#"
+				+ (size + 1);
+		//地址先
+		newtr.childNodes[1].childNodes[1].childNodes[3].id = (size + 1);
+		//明细番号
+		newtr.childNodes[1].childNodes[1].childNodes[3].childNodes[1].childNodes[1].childNodes[3].childNodes[1].value = (size + 1);
+
+		newtr.innerHTML = newtr.innerHTML.replace(oldStr, newStr)
+		oldStr = "detailsList[" + (size - 1) + "]"
+		newStr = "detailsList[" + (size) + "]"
+		newtr.innerHTML = newtr.innerHTML.replace(oldStr, newStr)
+		oldtr.after(newtr);
+
+	}
+</script>
 </head>
 <body>
 
@@ -28,47 +59,72 @@
 			</div>
 		</div>
 	</nav>
-	<form action="#" th:action="@{/orderDetails}"
-		th:object="${detailsList}" method="post">
-		<table>
-			<tr th:each="details : ${detailsList}">
+	<form action="#" th:action="@{/orderDetails}" th:object="${fromBean}"
+		method="post">
+		<ul th:if="${defaultDataFlg} != null">
+			<li
+				style="font-style: italic; background-color: #F2F; font-size: large;"
+				th:text="该订单暂无明细，请初始化追加。" />
+		</ul>
+		<table id="detailstable">
+			<tr th:each="details,rowStat : ${fromBean.detailsList}">
 				<td>
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
-								<a data-toggle="collapse" data-parent="#accordion"
+								<label th:unless="${details.viewFlg}"> <a
+									data-toggle="collapse" data-parent="#accordion"
 									th:href="'#' + ${details.cleanThingDetailsNumber}"
-									th:text="'明细' + ${details.cleanThingDetailsNumber}"></a>
+									th:text="'已记载明细' + ${details.cleanThingDetailsNumber}"></a>
+								</label> <label th:if="${details.viewFlg}"> <a
+									data-toggle="collapse" data-parent="#accordion"
+									th:href="'#' + ${details.cleanThingDetailsNumber}"
+									th:text="'初始化明细' + ${details.cleanThingDetailsNumber}"></a>
+								</label>
 							</h4>
 						</div>
 						<div th:id="${details.cleanThingDetailsNumber}"
 							class="panel-collapse collapse">
-							<div class="panel-body">
+							<div class="panel-body"
+								th:classappend="${#fields.hasErrors('all')}? has-error">
 								<p>
-									<span>订 单 号 码<input type="text" readonly="readonly"
-										th:value="${details.cleanThingNumber}" /></span> <span
-										style="float: right;">订单明细番号<input type="text"
+									<span>订 单 号 码<input type="number" readonly="readonly"
+										th:value="${details.cleanThingNumber}"
+										th:field="*{detailsList[__${rowStat.index}__].cleanThingNumber}" /></span>
+									<span style="float: right;">订单明细番号<input type="number"
 										readonly="readonly"
-										th:value="${details.cleanThingDetailsNumber}" /></span>
+										th:value="${details.cleanThingDetailsNumber}"
+										th:field="*{detailsList[__${rowStat.index}__].cleanThingDetailsNumber}" /></span>
 								</p>
 								<p>
-									<span>下 单 日 期<input type="text" readonly="readonly"
-										th:value="${details.createDate}" /></span> <span
-										style="float: right;">物品别名<input type="text"
-										th:value="${details.otherName}" /></span>
+									<span>下 单 日 期<input type="datetime" readonly="readonly"
+										th:value="${details.createDate}"
+										th:field="*{detailsList[__${rowStat.index}__].createDate}" /></span>
+									<span style="float: right;">物品别名<input type="text"
+										th:value="${details.otherName}"
+										th:field="*{detailsList[__${rowStat.index}__].otherName}" /></span>
 								</p>
 								<p>
-									<span>洗 衣 件 数<input type="text"
-										th:value="${details.washCount}" /></span> <span
-										style="float: right;">洗衣单位<input type="text"
-										th:value="${details.washUnit}" /></span>
+									<span>洗 衣 件 数<input type="number"
+										th:value="${details.washCount}"
+										th:field="*{detailsList[__${rowStat.index}__].washCount}" /></span>
+									<span style="float: right;"> <span
+										th:if="${#fields.hasErrors('*{detailsList[__${rowStat.index}__].washCount}')}"
+										th:errors="*{detailsList[__${rowStat.index}__].washCount}"
+										class="fieldError"></span> 洗衣单位<input type="text"
+										th:value="${details.washUnit}"
+										th:field="*{detailsList[__${rowStat.index}__].washUnit}" /></span>
 								</p>
 								<p>
-									<span>物 品 类 型 <select>
+									<span>物 品 类 型 <select
+										th:field="*{detailsList[__${rowStat.index}__].thingNumber}">
 											<option th:each="thing : ${thingList}"
 												th:value="${thing.thingNumber}" th:text="${thing.thingName}"
-												th:selected="${details.thingNumber} == ${thing.thingNumber} ? true : false"></option>
-									</select></span> <span style="float: right;">洗涤方式 <select
+												th:selected="${details.thingNumber} == ${thing.thingNumber} ? true : false">
+											</option>
+									</select>
+									</span> <span style="float: right;">洗涤方式 <select
+										th:field="*{detailsList[__${rowStat.index}__].washWayNumber}"
 										style="float: right;">
 											<option th:each="washWay : ${washWayList}"
 												th:value="${washWay.washWayNumber}"
@@ -77,34 +133,58 @@
 									</select></span>
 								</p>
 								<p>
-									<span>期望交付日期<input type="date"
-										th:value="${details.expectedDate}" /></span> <span
-										style="float: right;">实际交付日期<input type="date"
-										th:value="${details.realDate}" /></span>
+									<span>期望交付日期<input type="datetime"
+										th:value="${details.expectedDate}" class="datetimepicker"
+										th:field="*{detailsList[__${rowStat.index}__].expectedDate}" /></span>
+									<span style="float: right;">实际交付日期<input type="datetime"
+										th:value="${details.realDate}" class="datetimepicker"
+										th:field="*{detailsList[__${rowStat.index}__].realDate}" /></span>
 								</p>
 								<p>
-									<span>物品价格<input type="text"
-										th:value="${details.thingPrice}" /></span> <span
-										style="float: right;">管理号码/发票号码<input type="text"
-										th:value="${details.managementNumber}" /></span>
+									<span>物品价格<input type="number"
+										th:value="${details.thingPrice}"
+										th:field="*{detailsList[__${rowStat.index}__].thingPrice}" /></span>
+									<span style="float: right;">管理号码/发票号码<input type="text"
+										th:value="${details.managementNumber}"
+										th:field="*{detailsList[__${rowStat.index}__].managementNumber}" /></span>
 								</p>
 								<p>
-									<span>是否上门取件<input type="text"
-										th:value="${details.visitToGetOrder}" /></span> <span
-										style="float: right;">是否送件上门<input type="text"
-										th:value="${details.visitToPutOrder}" /></span>
+									<span>是否上门取件 <select
+										th:field="*{detailsList[__${rowStat.index}__].visitToGetOrder}">
+											<option th:each="yn : ${yesno}" th:value="${yn.flg}"
+												th:text="${yn.des}"
+												th:selected="${details.visitToGetOrder} == ${yn.flg} ? true : false"></option>
+									</select>
+									</span> <span style="float: right;">是否送件上门 <select
+										th:field="*{detailsList[__${rowStat.index}__].visitToPutOrder}">
+											<option th:each="yn : ${yesno}" th:value="${yn.flg}"
+												th:text="${yn.des}"
+												th:selected="${details.visitToPutOrder} == ${yn.flg} ? true : false"></option>
+									</select>
+									</span>
 								</p>
 								<p>
-									<span>消除旗帜<input type="text"
-										th:value="${details.deletedFlg}" /></span> <span
-										style="float: right;">消除日期<input type="date"
-										th:value="${details.deletedDate}" /></span>
+									<span>消除旗帜 <select
+										th:field="*{detailsList[__${rowStat.index}__].deletedFlg}">
+											<option th:each="yn : ${yesno}" th:value="${yn.flg}"
+												th:text="${yn.des}"
+												th:selected="${details.deletedFlg} == ${yn.flg} ? true : false"></option>
+									</select>
+
+									</span> <span style="float: right;">消除日期<input type="datetime"
+										th:value="${details.deletedDate}" class="datetimepicker"
+										th:field="*{detailsList[__${rowStat.index}__].deletedDate}" /></span>
 								</p>
 								<p>
-									<span>完成旗帜<input type="text"
-										th:value="${details.finishflg}" /></span> <span
-										style="float: right;">完成日期<input type="date"
-										th:value="${details.finishDate}" /></span>
+									<span>完成旗帜 <select
+										th:field="*{detailsList[__${rowStat.index}__].finishflg}">
+											<option th:each="yn : ${yesno}" th:value="${yn.flg}"
+												th:text="${yn.des}"
+												th:selected="${details.finishflg} == ${yn.flg} ? true : false"></option>
+									</select>
+									</span> <span style="float: right;">完成日期<input type="datetime"
+										th:value="${details.finishDate}" class="datetimepicker"
+										th:field="*{detailsList[__${rowStat.index}__].finishDate}" /></span>
 								</p>
 							</div>
 						</div>
@@ -112,8 +192,15 @@
 				</td>
 			</tr>
 		</table>
+		<p>
+			<input type="button" id="adddetailstable" value="增加明细"
+				onclick="addDetails()" /> <input style="float: right;"
+				type="submit" value="提交更改" />
+		</p>
 	</form>
 	<script type="text/javascript"
 		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="webjars/bootstrap-datetimepicker/2.3.5/js/bootstrap-datetimepicker.min.js"></script>
 </body>
 </html>

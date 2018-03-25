@@ -14,7 +14,7 @@ import com.cleaningstore.web.bean.result.OrderDetailsResult;
 public interface OrderDetailsMapper {
 
 	@Select(value = "select " //
-			+ " cleanThingNumber,"//
+			+ " orderdetailstable.cleanThingNumber,"//
 			+ " cleanThingDetailsNumber,"//
 			+ " to_char(createDate,'yyyy-mm-dd hh:mi') as createDate,"//
 			+ " otherName,"//
@@ -33,8 +33,12 @@ public interface OrderDetailsMapper {
 			+ " finishFlg,"//
 			+ " to_char(finishDate,'yyyy-mm-dd hh:mi') as finishDate"//
 			+ " from orderdetailstable "
-			+ " where cleanthingnumber = #{ordernumber}"//
+			+ " left outer join ordertable"
+			+ " on(ordertable.cleanThingNumber=orderdetailstable.cleanThingNumber)"
+			+ " where ordertable.ordernumber = #{ordernumber}"//
 			+ " order by cleanthingnumber asc,cleanthingdetailsnumber asc;")
 	public List<OrderDetailsResult> selectOrderDetails(@Param(value = "ordernumber") int ordernumber);
 
+	
+	
 }
