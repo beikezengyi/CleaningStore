@@ -3,7 +3,6 @@ package com.cleaningstore.jdbc.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -12,7 +11,6 @@ import org.apache.ibatis.annotations.UpdateProvider;
 import org.springframework.stereotype.Repository;
 
 import com.cleaningstore.jdbc.bean.OrderBean;
-import com.cleaningstore.jdbc.bean.OrderDetailsBean;
 import com.cleaningstore.web.bean.condition.SelectOrderCondition;
 import com.cleaningstore.web.bean.result.SelectOrderResult;
 
@@ -22,18 +20,18 @@ public interface OrderMapper {
 
 	@Select(value = " select " + " t1.ordernumber, "
 			+ " t2.cleanthingdetailsnumber||'(共'||t3.count||'条)' as cleanThingDetailsNumber,"
-			+ " to_char(t1.ordercreatedate,'yyyy-mm-dd hh:mi') as ordercreatedate,"
-			+ " to_char(t2.createDate,'yyyy-mm-dd hh:mi') as createDate," + " t4.customername,"
+			+ " to_char(t1.ordercreatedate,'yyyy-mm-dd hh24:mi') as ordercreatedate,"
+			+ " to_char(t2.createDate,'yyyy-mm-dd hh24:mi') as createDate," + " t4.customername,"
 			+ " t4.customerphonenumber," + " t4.accountbalance," + " t5.storename," + " t2.otherName,"
 			+ " t2.washcount||t2.washunit||t6.thingname as washCountWashUnitThingNumber," + " t7.washWayName,"
-			+ " to_char(t2.expectedDate,'yyyy-mm-dd hh:mi') as expectedDate,"
-			+ " to_char(t2.realDate,'yyyy-mm-dd hh:mi') as realDate," + " t2.thingPrice," + " t2.managementNumber,"
+			+ " to_char(t2.expectedDate,'yyyy-mm-dd hh24:mi') as expectedDate,"
+			+ " to_char(t2.realDate,'yyyy-mm-dd hh24:mi') as realDate," + " t2.thingPrice," + " t2.managementNumber,"
 			+ " case when t2.visittogetorder and t2.visittoputorder then '取件送件' "
 			+ "      when t2.visittogetorder and t2.visittoputorder=false then '仅取件' "
 			+ "      when t2.visittogetorder=false and t2.visittoputorder then '仅送件'"
 			+ "      else '' end as visitOrder," + " t2.deletedFlg,"
-			+ " to_char(t2.deletedDate,'yyyy-mm-dd hh:mi') as deleteDate," + " t2.finishFlg,"
-			+ " to_char(t2.finishDate,'yyyy-mm-dd hh:mi') as finishDate " +
+			+ " to_char(t2.deletedDate,'yyyy-mm-dd hh24:mi') as deleteDate," + " t2.finishFlg,"
+			+ " to_char(t2.finishDate,'yyyy-mm-dd hh24:mi') as finishDate " +
 
 			" from ordertable as t1" + " left outer join orderdetailstable as t2"
 			+ " on(t1.cleanthingnumber=t2.cleanthingnumber)"
@@ -49,20 +47,25 @@ public interface OrderMapper {
 	@SelectProvider(type = OrderSqlProvider.class, method = "selectOrderByCond")
 	public List<SelectOrderResult> selectOrderByCond(SelectOrderCondition cond);
 
-	@Insert(value = "INSERT INTO ordertable" + " VALUES ((select max(ordernumber)+1 from ordertable),"
+	@Insert(value = "INSERT INTO ordertable" + " VALUES ((select coalesce(max(ordernumber)+1,1) from ordertable),"
 			+ " #{order.customerNumber}, " + " #{order.storeNumber},"
-			+ " (select max(cleanthingnumber)+1 from orderdetailstable) )")
+			+ " (select coalesce(max(cleanthingnumber)+1,1) from ordertable) )")
 	public int insertOrder(@Param(value = "order") OrderBean order);
+	
+	
 
 	@UpdateProvider(type = OrderSqlProvider.class, method = "updateOrder")
 	public int updateOrder(@Param(value = "order") OrderBean order);
 
-	@InsertProvider(type = OrderSqlProvider.class, method = "insertOrderDetails")
-	public int insertOrderDetails(@Param(value = "orderDetails") OrderDetailsBean orderDetails);
-
-	@UpdateProvider(type = OrderSqlProvider.class, method = "updateOrderDetails")
-	public int updateOrderDetails(@Param(value = "orderDetails") OrderDetailsBean orderDetails);
-
-	@Select(value = "select * from ordertable order by ordercreatedate desc,ordernumber desc limit 1;")
+	@Select(value = " select t1.ordernumber,"
+			+ "to_char(t1.ordercreatedate,'yyyy-mm-dd hh24:mi:ss') as orderCreateDateStr,"
+			+" t2.customername,"
+			+ "t3.storename "
+			+" from ordertable as t1 , "
+			+" customertable  as t2 , "
+			+" storetable  as t3 "
+			+" where t2.customernumber=t1.customernumber "
+			+" and  t1.storenumber = t3.storenumber order "
+			+" by ordercreatedate  desc,ordernumber desc limit 1;")
 	public OrderBean selectMonestNew();
 }

@@ -25,15 +25,7 @@
 			</div>
 		</div>
 	</nav>
-	<!--
-	 <div class="seedstarterlist" th:unless="${#lists.isEmpty(inertedBean)}">
-		<p th:text="{ '订单番号:' + ${inertedBean.orderNumber}}"></p>
-		<p th:text="{ '订单番号:' + ${inertedBean.orderNumber}}"></p>
-		<p th:text="{ '订单番号:' + ${inertedBean.orderNumber}}"></p>
-		<p th:text="{ '订单番号:' + ${inertedBean.orderNumber}}"></p>
-	</div>
-	-->
-	<span id="customerNumber" th:value="${choosedCustomer.customerNumber}"></span>
+
 	<form id="createform" action="#"
 		th:action="@{/createOrderwithid(id=${choosedCustomer.customerNumber})}"
 		th:object="${orderBean}" method="post">
@@ -41,12 +33,12 @@
 			下单顾客姓名:<input type="text" id="customerName" name="customerName"
 				readonly="readonly" th:value="${choosedCustomer.customerName}" /> <img
 				alt="检索" src="../../pic/search.jpg" height="20px" width="20px"
-				onclick="search()" />
+				onclick="search()" /> <span id="customerNumber"
+				th:value="${choosedCustomer.customerNumber}"></span>
 		</p>
 		<p></p>
 		<p>
-			接单店铺名: 
-			<select th:field="*{storeNumber}">
+			接单店铺名: <select th:field="*{storeNumber}">
 				<option th:each="store : ${storeList}"
 					th:value="${store.storeNumber}" th:text="${store.storeName}"></option>
 			</select>
@@ -54,7 +46,33 @@
 
 		<input type="submit" value="创建订单" />
 	</form>
+	<p></p>
+	<p></p>
+	<p></p>
+	<p></p>
+	<p></p>
+	<form action="#" th:if="${inertedBean} != null">
+		<p style="color: red">订单创建成功</p>
+		<table border="1">
+			<tr>
+				<td>订单号码</td>
+				<td>下单顾客</td>
+				<td>接单店铺</td>
+				<td>接单时间</td>
+			</tr>
+			<tr>
+				<td><input type="text" readonly="readonly" style="width: 80px"
+					th:value="${inertedBean.orderNumber}" /></td>
+				<td><input type="text" readonly="readonly" style="width: 100px"
+					th:value="${inertedBean.customerName}" /></td>
+				<td><input type="text" readonly="readonly" style="width: 150px"
+					th:value="${inertedBean.storeName}" /></td>
+				<td><input type="text" readonly="readonly" style="width: 200px"
+					th:value="${inertedBean.orderCreateDateStr}" /></td>
+			</tr>
+		</table>
 
+	</form>
 	<script type="text/javascript"
 		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="../../js/createOrder.js"></script>

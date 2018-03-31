@@ -3,7 +3,6 @@ package com.cleaningstore.jdbc.mapper;
 import org.apache.ibatis.jdbc.SQL;
 
 import com.cleaningstore.jdbc.bean.OrderBean;
-import com.cleaningstore.jdbc.bean.OrderDetailsBean;
 import com.cleaningstore.web.bean.condition.SelectOrderCondition;
 
 public class OrderSqlProvider {
@@ -36,6 +35,14 @@ public class OrderSqlProvider {
 				+ " on(t2.washwaynumber=t7.washwaynumber)");
 		if (isExist(cond.getCustomerName())) {
 			sb.append("where t4.customername like '%" + cond.getCustomerName() + "%'");
+			multiCount++;
+		}
+		if (isExist(cond.getOrderNumber())) {
+			if (multiCount > 0) {
+				sb.append(" and t1.ordernumber =" + cond.getOrderNumber());
+			} else {
+				sb.append(" where t1.ordernumber =" + cond.getOrderNumber());
+			}
 			multiCount++;
 		}
 		if (isExist(cond.getCustomerPhoneNumber())) {
@@ -127,107 +134,9 @@ public class OrderSqlProvider {
 		return new SQL() {
 			{
 				UPDATE("ordertable");
-				if (order.getCustomerNumber() != 0) {
-					SET("customerNumber = #{order.customerNumber}");
-				}
-				if (order.getStoreNumber() != 0) {
-					SET("storeNumber = #{order.storeNumber}");
-				}
+				SET("customerNumber = #{order.customerNumber}");
+				SET("storeNumber = #{order.storeNumber}");
 				WHERE("orderNumber = #{order.orderNumber}");
-			}
-		}.toString();
-	}
-
-	public String insertOrderDetails(final OrderDetailsBean orderDetails) {
-		return new SQL() {
-			{
-				INSERT_INTO("orderdetailstable");
-				VALUES("cleanThingNumber", "#{orderDetails.cleanThingNumber}");
-				VALUES("cleanThingDetailsNumber",
-						"select coalesce(max(cleanthingdetailsnumber)+1,1) from orderdetailstable where cleanthingnumber=#{orderDetails.cleanThingNumber}");
-				VALUES("otherName", "#{orderDetails.otherName}");
-				if (isExist(orderDetails.getCreateDate())) {
-					VALUES("createDate", "#{orderDetails.createDate}");
-				} else {
-					VALUES("createDate", "current_timestamp");
-				}
-				VALUES("washCount", "#{orderDetails.washCount}");
-				VALUES("washUnit", "#{orderDetails.washUnit}");
-				VALUES("thingNumber", "#{orderDetails.thingNumber}");
-				VALUES("washWayNumber", "#{orderDetails.washWayNumber}");
-				VALUES("expectedDate", "#{orderDetails.expectedDate}");
-				if (isExist(orderDetails.getRealDate())) {
-					VALUES("realDate", "#{orderDetails.realDate}");
-				}
-				if (isExist(orderDetails.getThingPrice())) {
-					VALUES("thingPrice", "#{orderDetails.thingPrice}");
-				}
-				VALUES("managementNumber", "#{orderDetails.managementNumber}");
-				VALUES("visitToGetOrder", "#{orderDetails.visitToGetOrder}");
-				VALUES("visitToPutOrder", "#{orderDetails.visitToPutOrder}");
-				VALUES("deletedFlg", "#{orderDetails.deletedFlg}");
-				if (isExist(orderDetails.getDeletedDate())) {
-					VALUES("deletedDate", "#{orderDetails.deletedDate}");
-				}
-				VALUES("finishflg", "#{orderDetails.finishflg}");
-				if (isExist(orderDetails.getFinishDate())) {
-					VALUES("finishDate", "#{orderDetails.finishDate}");
-				}
-			}
-		}.toString();
-	}
-
-	public String updateOrderDetails(final OrderDetailsBean orderDetails) {
-		return new SQL() {
-			{
-				UPDATE("orderdetailstable");
-				if (isExist(orderDetails.getOtherName())) {
-					SET("othername = #{orderDetails.otherName}");
-				}
-				if (isExist(orderDetails.getWashCount())) {
-					SET("storeNumber = #{orderDetails.washCount}");
-				}
-				if (isExist(orderDetails.getWashUnit())) {
-					SET("washUnit = #{orderDetails.washUnit}");
-				}
-				if (isExist(orderDetails.getThingNumber())) {
-					SET("thingNumber = #{orderDetails.thingNumber}");
-				}
-				if (isExist(orderDetails.getWashWayNumber())) {
-					SET("washWayNumber = #{orderDetails.washWayNumber}");
-				}
-				if (isExist(orderDetails.getExpectedDate())) {
-					SET("expectedDate = #{orderDetails.expectedDate}");
-				}
-				if (isExist(orderDetails.getRealDate())) {
-					SET("realDate = #{orderDetails.realDate}");
-				}
-				if (isExist(orderDetails.getThingPrice())) {
-					SET("thingPrice = #{orderDetails.thingPrice}");
-				}
-				if (isExist(orderDetails.getManagementNumber())) {
-					SET("managementNumber = #{orderDetails.managementNumber}");
-				}
-				if (isExist(orderDetails.isVisitToGetOrder())) {
-					SET("visitToGetOrder = #{orderDetails.visitToGetOrder}");
-				}
-				if (isExist(orderDetails.isVisitToPutOrder())) {
-					SET("visitToPutOrder = #{orderDetails.visitToPutOrder}");
-				}
-				if (isExist(orderDetails.isDeletedFlg())) {
-					SET("deletedFlg = #{orderDetails.deletedFlg}");
-				}
-				if (isExist(orderDetails.getDeletedDate())) {
-					SET("deletedDate = #{orderDetails.deletedDate}");
-				}
-				if (isExist(orderDetails.isFinishflg())) {
-					SET("finishflg = #{orderDetails.finishflg}");
-				}
-				if (isExist(orderDetails.getFinishDate())) {
-					SET("finishDate = #{orderDetails.finishDate}");
-				}
-				WHERE("cleanThingNumber = #{orderDetails.cleanThingNumber}");
-				WHERE("cleanThingDetailsNumber = #{orderDetails.cleanThingDetailsNumber}");
 			}
 		}.toString();
 	}

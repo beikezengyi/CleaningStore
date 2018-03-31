@@ -2,9 +2,11 @@ package com.cleaningstore.jdbc.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.UpdateProvider;
 import org.springframework.stereotype.Repository;
 
 import com.cleaningstore.web.bean.result.OrderDetailsResult;
@@ -16,7 +18,7 @@ public interface OrderDetailsMapper {
 	@Select(value = "select " //
 			+ " orderdetailstable.cleanThingNumber,"//
 			+ " cleanThingDetailsNumber,"//
-			+ " to_char(createDate,'yyyy-mm-dd hh:mi') as createDate,"//
+			+ " true as created," + " false as toinsert," + " to_char(createDate,'yyyy-mm-dd hh:mi') as createDate,"//
 			+ " otherName,"//
 			+ " washCount,"//
 			+ " washUnit,"//
@@ -32,13 +34,15 @@ public interface OrderDetailsMapper {
 			+ " to_char(deletedDate,'yyyy-mm-dd hh:mi') as deletedDate,"//
 			+ " finishFlg,"//
 			+ " to_char(finishDate,'yyyy-mm-dd hh:mi') as finishDate"//
-			+ " from orderdetailstable "
-			+ " left outer join ordertable"
+			+ " from orderdetailstable " + " left outer join ordertable"
 			+ " on(ordertable.cleanThingNumber=orderdetailstable.cleanThingNumber)"
 			+ " where ordertable.ordernumber = #{ordernumber}"//
 			+ " order by cleanthingnumber asc,cleanthingdetailsnumber asc;")
 	public List<OrderDetailsResult> selectOrderDetails(@Param(value = "ordernumber") int ordernumber);
 
-	
-	
+	@UpdateProvider(type = OrderDetailsSqlProvider.class, method = "updateOrderDetails")
+	public int updateOrderDetails(OrderDetailsResult re);
+
+	@InsertProvider(type = OrderDetailsSqlProvider.class, method = "insertOrderDetails")
+	public int insertOrderDetails(OrderDetailsResult re);	
 }

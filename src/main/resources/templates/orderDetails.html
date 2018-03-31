@@ -18,30 +18,15 @@
 		$(".datetimepicker").datetimepicker();
 	});
 
-	function addDetails() {
-		var detailstable = document.getElementById("detailstable");
-		var size = detailstable.rows.length;
-		var oldtr = detailstable.rows[size - 1];
-		var newtr = oldtr.cloneNode(true);
-		var oldStr = "detailsList" + (size - 1)
-		var newStr = "detailsList" + (size)
-		//明细显示
-		newtr.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[1].innerHTML = "明细"
-				+ (size + 1);
-		//地址面
-		newtr.childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[1].hash = "#"
-				+ (size + 1);
-		//地址先
-		newtr.childNodes[1].childNodes[1].childNodes[3].id = (size + 1);
-		//明细番号
-		newtr.childNodes[1].childNodes[1].childNodes[3].childNodes[1].childNodes[1].childNodes[3].childNodes[1].value = (size + 1);
+	function changeColor(id, selectValue) {
+		var index = id.substring(11, 12);
 
-		newtr.innerHTML = newtr.innerHTML.replace(oldStr, newStr)
-		oldStr = "detailsList[" + (size - 1) + "]"
-		newStr = "detailsList[" + (size) + "]"
-		newtr.innerHTML = newtr.innerHTML.replace(oldStr, newStr)
-		oldtr.after(newtr);
-
+		var divid = "div" + index;
+		if (selectValue == "t") {
+			$("#" + divid).attr("style", "background-color: #d7dde5;");
+		} else {
+			$("#" + divid).attr("style", "background-color: #FFF;");
+		}
 	}
 </script>
 </head>
@@ -66,29 +51,52 @@
 				style="font-style: italic; background-color: #F2F; font-size: large;"
 				th:text="该订单暂无明细，请初始化追加。" />
 		</ul>
+		<ul th:if="${updateSuccess} != null">
+			<li th:if="${updateSuccess}"
+				style="font-style: italic; background-color: #E2F; font-size: large;"
+				th:text="数据更新或者插入成功。" />
+			<li th:unless="${updateSuccess}"
+				style="font-style: italic; background-color: #F2F; font-size: large;"
+				th:text="数据更新或者插入失败，请检查并修改后重新提交！" />
+		</ul>
 		<table id="detailstable">
 			<tr th:each="details,rowStat : ${fromBean.detailsList}">
 				<td>
-					<div class="panel panel-default">
+					<div th:id="'div' + ${rowStat.index}" class="panel panel-default">
 						<div class="panel-heading">
 							<h4 class="panel-title">
-								<label th:unless="${details.viewFlg}"> <a
+								<label th:if="${details.created}"> <a
 									data-toggle="collapse" data-parent="#accordion"
 									th:href="'#' + ${details.cleanThingDetailsNumber}"
-									th:text="'已记载明细' + ${details.cleanThingDetailsNumber}"></a>
-								</label> <label th:if="${details.viewFlg}"> <a
+									th:text="'已　记　载　明　细　' + ${details.cleanThingDetailsNumber}"
+									style="background-color: #EEE"></a> <input type="hidden"
+									th:field="*{detailsList[__${rowStat.index}__].created}"
+									th:value="${details.created}" />
+								</label> <label th:unless="${details.created}"> <a
 									data-toggle="collapse" data-parent="#accordion"
+									th:field="*{detailsList[__${rowStat.index}__].created}"
+									th:value="${details.created}"
 									th:href="'#' + ${details.cleanThingDetailsNumber}"
-									th:text="'初始化明细' + ${details.cleanThingDetailsNumber}"></a>
+									th:text="'初　始　化　明　细　' + ${details.cleanThingDetailsNumber}"
+									style="background-color: #E2E"></a> 选中提交数据库<input
+									type="checkbox" style="width: 45px;"
+									th:field="*{detailsList[__${rowStat.index}__].toinsert}" />
 								</label>
 							</h4>
 						</div>
+						<ul>
+							<li th:each="err : ${details.errormsg}"
+								style="font-style: oblique; background-color: #db5727; font-size: 20px;"
+								th:text="${err}"></li>
+						</ul>
 						<div th:id="${details.cleanThingDetailsNumber}"
 							class="panel-collapse collapse">
 							<div class="panel-body"
 								th:classappend="${#fields.hasErrors('all')}? has-error">
 								<p>
-									<span>订 单 号 码<input type="number" readonly="readonly"
+									<span>订 单 号 码 <input type="number" readonly="readonly"
+										th:value="${fromBean.orderNumber}"
+										th:field="*{orderNumber}" /> <input type="hidden"
 										th:value="${details.cleanThingNumber}"
 										th:field="*{detailsList[__${rowStat.index}__].cleanThingNumber}" /></span>
 									<span style="float: right;">订单明细番号<input type="number"
@@ -108,12 +116,16 @@
 									<span>洗 衣 件 数<input type="number"
 										th:value="${details.washCount}"
 										th:field="*{detailsList[__${rowStat.index}__].washCount}" /></span>
-									<span style="float: right;"> <span
-										th:if="${#fields.hasErrors('*{detailsList[__${rowStat.index}__].washCount}')}"
-										th:errors="*{detailsList[__${rowStat.index}__].washCount}"
-										class="fieldError"></span> 洗衣单位<input type="text"
-										th:value="${details.washUnit}"
-										th:field="*{detailsList[__${rowStat.index}__].washUnit}" /></span>
+									<span style="float: right;"> 洗衣单位 <select
+										th:field="*{detailsList[__${rowStat.index}__].washUnit}">
+											<option value="件" th:selected="${details.washUnit} == '件'">件</option>
+											<option value="套" th:selected="${details.washUnit} == '套'">套</option>
+											<option value="条" th:selected="${details.washUnit} == '条'">条</option>
+											<option value="床" th:selected="${details.washUnit} == '床'">床</option>
+											<option value="个" th:selected="${details.washUnit} == '个'">个</option>
+											<option value="打" th:selected="${details.washUnit} == '打'">打</option>
+									</select>
+									</span>
 								</p>
 								<p>
 									<span>物 品 类 型 <select
@@ -165,6 +177,7 @@
 								</p>
 								<p>
 									<span>消除旗帜 <select
+										onchange="changeColor(this.id,this.value)"
 										th:field="*{detailsList[__${rowStat.index}__].deletedFlg}">
 											<option th:each="yn : ${yesno}" th:value="${yn.flg}"
 												th:text="${yn.des}"
@@ -177,6 +190,7 @@
 								</p>
 								<p>
 									<span>完成旗帜 <select
+										onchange="changeColor(this.id,this.value)"
 										th:field="*{detailsList[__${rowStat.index}__].finishflg}">
 											<option th:each="yn : ${yesno}" th:value="${yn.flg}"
 												th:text="${yn.des}"
@@ -193,9 +207,7 @@
 			</tr>
 		</table>
 		<p>
-			<input type="button" id="adddetailstable" value="增加明细"
-				onclick="addDetails()" /> <input style="float: right;"
-				type="submit" value="提交更改" />
+			<input style="float: center;" type="submit" value="提交更改" />
 		</p>
 	</form>
 	<script type="text/javascript"

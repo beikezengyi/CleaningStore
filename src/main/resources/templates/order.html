@@ -35,6 +35,11 @@ function goOrderDetails(ordernumber){
 	<form action="#" th:action="@{/order}" th:object="${cond}"
 		method="post">
 		<div class="center">
+			<span>订　　单　　番　号:<input type="number" th:field="*{orderNumber}"
+				name="orderNumber" />
+			</span> 
+		</div>		
+		<div class="center">
 			<span> 顾　　客　　姓　名:<input type="text" th:field="*{customerName}"
 				name="customerName" />
 			</span> <span style="float: right;"> 顾客电话:<input type="text"

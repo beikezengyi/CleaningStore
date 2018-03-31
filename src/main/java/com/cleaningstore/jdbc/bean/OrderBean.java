@@ -1,7 +1,5 @@
 package com.cleaningstore.jdbc.bean;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,13 +20,15 @@ public class OrderBean {
 
 	/** 下单顾客番号 */
 	private int customerNumber;
+	
+	private String customerName;
 
 	/** 接单店铺号 */
 	private int storeNumber;
+	private String storeName;
 
 	/** 洗涤物品一连番号 */
 	private int cleanThingNumber;
 	
-	private Date orderCreateDate;
-
+	private String orderCreateDateStr;
 }

@@ -44,6 +44,8 @@ public class CreateOrderController {
 		model.put("orderBean", new OrderBean());
 		OrderBean inertedBean = orderMapper.selectMonestNew();
 		model.put("inertedBean", inertedBean);
+		model.put("customerBean", new CustomerBean());
+		model.put("choosedCustomer", new CustomerBean());
 		return "createOrder";
 	}
 

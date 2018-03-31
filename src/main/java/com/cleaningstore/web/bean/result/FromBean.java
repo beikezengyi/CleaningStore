@@ -8,5 +8,7 @@ import lombok.Data;
 @Data
 public class FromBean {
 
-	 List<OrderDetailsResult> detailsList = new ArrayList<>();
+	private Integer orderNumber;
+
+	private List<OrderDetailsResult> detailsList = new ArrayList<>();
 }
