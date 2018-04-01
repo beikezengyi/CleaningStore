@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>检索顾客</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="stylesheet" type="text/css"
+	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<link rel="stylesheet" th:href="@{/css/main.css}"
+	href="../../css/main.css" />
+</head>
+<body>
+	<div id="includedContent"></div>
+	<form action="#" th:action="@{/createCustomer}" th:object="${cu}"
+		method="post">
+
+		<ul>
+			<li th:each="msg : ${cu.errormsg}"
+				style="font-style: italic; background-color: red; font-size: large;"
+				th:text="${msg}"></li>
+		</ul>
+		<p>
+			顾客姓名:<input type="text" th:field="*{customerName}"
+				th:text="${createCustomer}" />
+		</p>
+		<p>
+			顾客电话:<input type="text" th:field="*{customerPhoneNumber}"
+				th:text="${customerPhoneNumber}" />
+		</p>
+		<p>
+			顾客性别:<select th:field="*{customerSex}">
+				<option value="1">男士</option>
+				<option value="2">女士</option>
+				<option value="3">其他</option>
+			</select>
+		</p>
+		<p>
+			家庭地址:<input type="text" th:field="*{customerAddress}"
+				th:text="${customerAddress}" />
+		</p>
+		<p>
+			家庭人数:<input type="text" th:field="*{customerFamilies}"
+				th:text="${customerFamilies}" />
+		</p>
+		<p>
+			充值金额:<input type="number" th:field="*{accountPayment}"
+				th:text="${accountPayment}" onchange="changeChargeValue()" />
+		</p>
+		<p>
+			赠送金额: <input type="radio" th:text="'选择'" name="freetype"
+				id="selectFree" style="width: 20px" checked="checked"
+				onclick="changeFreeType(this.id)" /> <select id="freeBalanceSe"
+				onchange="changeFreeValue(this.id)">
+				<option value="0">0</option>
+				<option value="10">10</option>
+				<option value="20">20</option>
+				<option value="30">30</option>
+				<option value="40">40</option>
+				<option value="50">50</option>
+				<option value="60">60</option>
+				<option value="70">70</option>
+				<option value="80">80</option>
+				<option value="90">90</option>
+				<option value="100">100</option>
+			</select> <input type="radio" style="width: 20px" th:text="'自定义'"
+				id="inputFree" name="freetype" onclick="changeFreeType(this.id)" />
+			<input type="number" th:value="'0'"
+				onchange="changeFreeValue(this.id)" id="freeBalanceIn" />
+		</p>
+		<p>
+			本次充值获得金额:<input type="number" th:field="*{accountBalance}"
+				id="accountBalance" th:text="${accountBalance}" readonly="readonly" />
+			本次充值后金额:<input id="afterCharge" readonly="readonly" type="number"
+				th:value="'0'" />
+		</p>
+		<input type="submit" value="注册新会员" />
+	</form>
+
+
+
+	<div class="container">
+		<div class="table-responsive" th:if="${successflg}">
+			<h2>会员注册成功，点击顾客对应的顾客番号可其创建订单。</h2>
+			<table id="customertable" class="table table-bordered table-striped">
+				<tr>
+					<td>顾客番号</td>
+					<td>顾客名</td>
+					<td>顾客电话</td>
+					<td>顾客性别</td>
+					<td>住址</td>
+					<td>家庭构成人数</td>
+					<td>充值金额</td>
+					<td>账户余额</td>
+				</tr>
+				<tr>
+					<td><a href="#" th:text="${cu.customerNumber}"
+						onclick="selectCustomer(this.innerText)"></a></td>
+					<td th:text="${cu.customerName}"></td>
+					<td th:text="${cu.customerPhoneNumber}" />
+					<td th:text="${cu.customerSexStr}" />
+					<td th:text="${cu.customerAddress}" />
+					<td th:text="${cu.customerFamilies}" />
+					<td th:text="${cu.accountPayment}" />
+					<td th:text="${cu.accountBalance}" />
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="webjars/jquery/2.1.4/jquery.js"></script>
+	<script type="text/javascript"
+		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="../../js/createCustomer.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#includedContent").load("/header");
+		});
+	</script>
+</body>
+</html>

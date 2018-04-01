@@ -1,21 +1,23 @@
 package com.cleaningstore.jdbc.bean;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
-@Setter
-@ToString
+import lombok.Data;
+
+@Data
 public class CustomerBean {
 
-	private int customerNumber;
+	private Integer customerNumber;
 	private String customerName;
 	private String customerPhoneNumber;
-	private int customerSex;
+	private Integer customerSex;
+	private String customerSexStr;
 	private String customerAddress;
-	private int customerFamilies;
-	private int accountPayment;
-	private int accountBalance;
+	private Integer customerFamilies;
+	private Integer accountPayment;
+	private Integer accountBalance;
+
+	private List<String> errormsg = new ArrayList<>();
 
 }

@@ -21,8 +21,10 @@ public class OrderSqlProvider {
 				+ " case when t2.visittogetorder and t2.visittoputorder then '取件送件' "
 				+ "      when t2.visittogetorder and t2.visittoputorder=false then '仅取件' "
 				+ "      when t2.visittogetorder=false and t2.visittoputorder then '仅送件'"
-				+ "      else '' end as visitOrder," + " t2.deletedFlg,"
-				+ " to_char(t2.deletedDate,'yyyy-mm-dd hh:mi') as deleteDate," + " t2.finishFlg,"
+				+ "      else '' end as visitOrder," 
+				+ " case when t2.deletedFlg then '是' else '否' end as deletedFlg,"
+				+ " to_char(t2.deletedDate,'yyyy-mm-dd hh:mi') as deleteDate," 
+				+ " case when t2.finishFlg then '是' else '否' end as finishFlg,"
 				+ " to_char(t2.finishDate,'yyyy-mm-dd hh:mi') as finishDate " +
 
 				" from ordertable as t1" + " left outer join orderdetailstable as t2"

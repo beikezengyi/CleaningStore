@@ -29,11 +29,14 @@ public interface OrderMapper {
 			+ " case when t2.visittogetorder and t2.visittoputorder then '取件送件' "
 			+ "      when t2.visittogetorder and t2.visittoputorder=false then '仅取件' "
 			+ "      when t2.visittogetorder=false and t2.visittoputorder then '仅送件'"
-			+ "      else '' end as visitOrder," + " t2.deletedFlg,"
-			+ " to_char(t2.deletedDate,'yyyy-mm-dd hh24:mi') as deleteDate," + " t2.finishFlg,"
-			+ " to_char(t2.finishDate,'yyyy-mm-dd hh24:mi') as finishDate " +
+			+ "      else '' end as visitOrder," 
+			+ " case when t2.deletedFlg then '是' else '否' end as deletedFlg,"
+			+ " to_char(t2.deletedDate,'yyyy-mm-dd hh24:mi') as deleteDate," 
+			+ " case when t2.finishFlg then '是' else '否' end as finishFlg,"
+			+ " to_char(t2.finishDate,'yyyy-mm-dd hh24:mi') as finishDate " 
 
-			" from ordertable as t1" + " left outer join orderdetailstable as t2"
+			+" from ordertable as t1" 
+			+ " left outer join orderdetailstable as t2"
 			+ " on(t1.cleanthingnumber=t2.cleanthingnumber)"
 			+ " left outer join (select cleanthingnumber,count(1)as count from orderdetailstable group by cleanthingnumber)as t3"
 			+ " on(t1.cleanthingnumber=t3.cleanthingnumber)" + " left outer join customertable as t4"

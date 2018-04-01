@@ -1,49 +1,18 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>侯姐专业洗涤</title>
+<title>订单详细</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<script
-	src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="../../js/welcome.js"></script>
-
 <link rel="stylesheet" type="text/css"
 	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css"
 	href="webjars/bootstrap-datetimepicker/2.3.5/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" th:href="@{/css/main.css}"
 	href="../../css/main.css" />
-<script type="text/javascript">
-	$(function() {
-		$(".datetimepicker").datetimepicker();
-	});
-
-	function changeColor(id, selectValue) {
-		var index = id.substring(11, 12);
-
-		var divid = "div" + index;
-		if (selectValue == "t") {
-			$("#" + divid).attr("style", "background-color: #d7dde5;");
-		} else {
-			$("#" + divid).attr("style", "background-color: #FFF;");
-		}
-	}
-</script>
 </head>
 <body>
 
-	<nav class="navbar navbar-inverse">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#">侯姐专业洗涤</a>
-			</div>
-			<div id="navbar" class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="/">首页</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<div id="includedContent"></div>
 	<form action="#" th:action="@{/orderDetails}" th:object="${fromBean}"
 		method="post">
 		<ul th:if="${defaultDataFlg} != null">
@@ -53,8 +22,8 @@
 		</ul>
 		<ul th:if="${updateSuccess} != null">
 			<li th:if="${updateSuccess}"
-				style="font-style: italic; background-color: #E2F; font-size: large;"
-				th:text="数据更新或者插入成功。" />
+				style="font-style: italic; background-color: #e5bc16; font-size: large;"
+				th:text="'数据'+ ${countup}+'件更新，'+${countin}+'件插入成功。'"></li>
 			<li th:unless="${updateSuccess}"
 				style="font-style: italic; background-color: #F2F; font-size: large;"
 				th:text="数据更新或者插入失败，请检查并修改后重新提交！" />
@@ -95,9 +64,8 @@
 								th:classappend="${#fields.hasErrors('all')}? has-error">
 								<p>
 									<span>订 单 号 码 <input type="number" readonly="readonly"
-										th:value="${fromBean.orderNumber}"
-										th:field="*{orderNumber}" /> <input type="hidden"
-										th:value="${details.cleanThingNumber}"
+										th:value="${fromBean.orderNumber}" th:field="*{orderNumber}" />
+										<input type="hidden" th:value="${details.cleanThingNumber}"
 										th:field="*{detailsList[__${rowStat.index}__].cleanThingNumber}" /></span>
 									<span style="float: right;">订单明细番号<input type="number"
 										readonly="readonly"
@@ -108,7 +76,7 @@
 									<span>下 单 日 期<input type="datetime" readonly="readonly"
 										th:value="${details.createDate}"
 										th:field="*{detailsList[__${rowStat.index}__].createDate}" /></span>
-									<span style="float: right;">物品别名<input type="text"
+									<span style="float: right;">别名/残损污备注<input type="text"
 										th:value="${details.otherName}"
 										th:field="*{detailsList[__${rowStat.index}__].otherName}" /></span>
 								</p>
@@ -136,8 +104,7 @@
 											</option>
 									</select>
 									</span> <span style="float: right;">洗涤方式 <select
-										th:field="*{detailsList[__${rowStat.index}__].washWayNumber}"
-										style="float: right;">
+										th:field="*{detailsList[__${rowStat.index}__].washWayNumber}">
 											<option th:each="washWay : ${washWayList}"
 												th:value="${washWay.washWayNumber}"
 												th:text="${washWay.washWayName}"
@@ -210,9 +177,30 @@
 			<input style="float: center;" type="submit" value="提交更改" />
 		</p>
 	</form>
+	<script type="text/javascript" src="webjars/jquery/2.1.4/jquery.js"></script>
 	<script type="text/javascript"
 		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript"
 		src="webjars/bootstrap-datetimepicker/2.3.5/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="../../js/welcome.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#includedContent").load("/header");
+		});
+		$(function() {
+			$(".datetimepicker").datetimepicker();
+		});
+
+		function changeColor(id, selectValue) {
+			var index = id.substring(11, 12);
+
+			var divid = "div" + index;
+			if (selectValue == "t") {
+				$("#" + divid).attr("style", "background-color: #d7dde5;");
+			} else {
+				$("#" + divid).attr("style", "background-color: #FFF;");
+			}
+		}
+	</script>
 </body>
 </html>

@@ -47,13 +47,13 @@ public class SelectOrderResult {
 	private String visitOrder;
 
 	/** 消除旗帜 */
-	private boolean deletedFlg;
+	private String deletedFlg;
 
 	/** 消除日期 */
 	private String deletedDate;
 
 	/** 完成旗帜 */
-	private boolean finishFlg;
+	private String finishFlg;
 
 	/** 完成日期 */
 	private String finishDate;

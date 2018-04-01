@@ -17,7 +17,11 @@ public interface CustomerMapper {
 	@Select(value = " select * from customertable")
 	public List<CustomerBean> selectCustomer();
 
-	@Select(value = " select * from customertable where "//
+	@Select(value = " select *,"
+			+ "case when customersex = 1 then '男士'"
+			+ " when customersex = 2 then '女士' "
+			+ " else '其他' end as customerSexStr "
+			+ "from customertable where "//
 			+ "customerName like '%'||#{customerName}||'%'" //
 			+ " and customerPhoneNumber like '%'||#{customerPhoneNumber}||'%'")
 	public List<CustomerBean> selectCustomerByCon(//
@@ -28,13 +32,26 @@ public interface CustomerMapper {
 	public CustomerBean selectOne(@Param(value = "id") int id);
 
 	@Insert(value = "INSERT INTO customertable" //
-			+ " VALUES ((select max(customerNumber)+1 from customertable),"//
+			+ " VALUES ((select coalesce(max(customerNumber)+1,1) from customertable),"//
 			+ " #{customer.customerName}," //
 			+ "#{customer.customerPhoneNumber}," //
 			+ "#{customer.customerSex},"//
 			+ "#{customer.customerAddress}," //
 			+ "#{customer.customerFamilies}," //
 			+ "#{customer.accountPayment},"//
-			+ "#{customer.accountBalance}")
+			+ "#{customer.accountBalance}"
+			+ ")")
 	public int insertCustomer(@Param(value = "customer") CustomerBean customer);
+	
+	@Select(value="select count(1) = 0 "
+			+ " from customertable"
+			+ " where customerName=#{customer.customerName}")
+	public boolean canInsert(@Param(value = "customer") CustomerBean customer);
+	
+	@Select(value = " select *,"
+			+ "case when customersex = 1 then '男士'"
+			+ " when customersex = 2 then '女士' "
+			+ " else '其他' end as customerSexStr "
+			+ " from customertable where customerName = #{customerName}")
+	public CustomerBean selectInserted(@Param(value = "customerName") String customerName);
 }

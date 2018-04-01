@@ -11,3 +11,10 @@ function welcome(){
 	window.location.href='/';
 }
 
+function createCustomer(){
+	window.location.href='/createCustomer';
+}
+
+function selectCustomer(){
+	window.location.href='/selectCustomer';
+}

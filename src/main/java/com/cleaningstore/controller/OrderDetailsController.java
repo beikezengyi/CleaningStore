@@ -64,10 +64,12 @@ public class OrderDetailsController {
 			model.put("updateSuccess", true);
 			model.put("countin", countin);
 			model.put("countup", countup);
+			detailsCommon(model, fromBean.getOrderNumber());
 		} else {
+			fromBean.setDetailsList(detailsList);
+			createList(model, fromBean);
 			model.put("updateSuccess", false);
 		}
-		detailsCommon(model, fromBean.getOrderNumber());
 		return "orderDetails";
 	}
 
@@ -83,6 +85,10 @@ public class OrderDetailsController {
 		FromBean fromBean = new FromBean();
 		fromBean.setOrderNumber(orderNumber);
 		fromBean.setDetailsList(detailsList);
+		createList(model, fromBean);
+	}
+
+	private void createList(Map<String, Object> model, FromBean fromBean) {
 		model.put("fromBean", fromBean);
 		List<ThingBean> thingList = thingMapper.selectThing();
 		model.put("thingList", thingList);

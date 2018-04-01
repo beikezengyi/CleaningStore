@@ -6,29 +6,21 @@
 
 <link rel="stylesheet" type="text/css"
 	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
-
 <link rel="stylesheet" th:href="@{/css/main.css}"
 	href="../../css/main.css" />
-
 </head>
 <body>
 
-	<nav class="navbar navbar-inverse">
-		<div class="container">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#">侯姐专业洗涤</a>
-			</div>
-			<div id="navbar" class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="/">首页</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
-
+	<div id="includedContent"></div>
 	<form id="createform" action="#"
 		th:action="@{/createOrderwithid(id=${choosedCustomer.customerNumber})}"
 		th:object="${orderBean}" method="post">
+
+		<ul th:if="${checkerror} != null">
+			<li th:if="${checkerror}"
+				style="font-style: italic; background-color: red; font-size: large;"
+				th:text="'请点击放大镜查找顾客!'"></li>
+		</ul>
 		<p>
 			下单顾客姓名:<input type="text" id="customerName" name="customerName"
 				readonly="readonly" th:value="${choosedCustomer.customerName}" /> <img
@@ -61,8 +53,8 @@
 				<td>接单时间</td>
 			</tr>
 			<tr>
-				<td><input type="text" readonly="readonly" style="width: 80px"
-					th:value="${inertedBean.orderNumber}" /></td>
+				<td><a href="#" th:text="${inertedBean.orderNumber}"
+					onclick="goOrderDetails(this.innerText)"></a></td>
 				<td><input type="text" readonly="readonly" style="width: 100px"
 					th:value="${inertedBean.customerName}" /></td>
 				<td><input type="text" readonly="readonly" style="width: 150px"
@@ -73,8 +65,14 @@
 		</table>
 
 	</form>
+	<script type="text/javascript" src="webjars/jquery/2.1.4/jquery.js"></script>
 	<script type="text/javascript"
 		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="../../js/createOrder.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#includedContent").load("/header");
+		});
+	</script>
 </body>
 </html>

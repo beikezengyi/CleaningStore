@@ -3,19 +3,15 @@
 <head>
 <title>侯姐专业洗涤</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<script
-	src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="../../js/welcome.js"></script>
 
 <link rel="stylesheet" type="text/css"
 	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
 
 <link rel="stylesheet" th:href="@{/css/main.css}"
 	href="../../css/main.css" />
-
 </head>
 <body>
-
+	<div id="includedContent"></div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h4 class="panel-title">
@@ -39,8 +35,10 @@
 		</div>
 		<div id="collapseTwo" class="panel-collapse collapse">
 			<div class="panel-body">
-				<button type="button" class="btn btn-info">新建顾客</button>
-				<button type="button" class="btn btn-info">顾客查询</button>
+				<button type="button" class="btn btn-info"
+					onclick="createCustomer()">新建顾客</button>
+				<button type="button" class="btn btn-info"
+					onclick="selectCustomer()">顾客查询</button>
 			</div>
 		</div>
 	</div>
@@ -58,8 +56,15 @@
 			</div>
 		</div>
 	</div>
-
+	<script
+		src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script type="text/javascript"
 		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="../../js/welcome.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("#includedContent").load("/header");
+		});
+	</script>
 </body>
 </html>

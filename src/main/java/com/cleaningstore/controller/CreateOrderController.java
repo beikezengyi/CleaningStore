@@ -38,12 +38,17 @@ public class CreateOrderController {
 			@ModelAttribute OrderBean orderBean, //
 			@RequestParam(value = "id", required = false) Integer id) {
 		// , @ModelAttribute CustomerBean customerBean
-		orderBean.setCustomerNumber(id);
-		orderMapper.insertOrder(orderBean);
+
+		if (id != null && id != 0) {
+			orderBean.setCustomerNumber(id);
+			orderMapper.insertOrder(orderBean);
+			OrderBean inertedBean = orderMapper.selectMonestNew();
+			model.put("inertedBean", inertedBean);			
+		} else {
+			model.put("checkerror", true);
+		}
 		model.put("storeList", storeMapper.selectStore());
 		model.put("orderBean", new OrderBean());
-		OrderBean inertedBean = orderMapper.selectMonestNew();
-		model.put("inertedBean", inertedBean);
 		model.put("customerBean", new CustomerBean());
 		model.put("choosedCustomer", new CustomerBean());
 		return "createOrder";

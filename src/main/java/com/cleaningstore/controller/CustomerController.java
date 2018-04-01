@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.cleaningstore.jdbc.bean.CustomerBean;
 import com.cleaningstore.jdbc.bean.OrderBean;
 import com.cleaningstore.jdbc.mapper.CustomerMapper;
 import com.cleaningstore.jdbc.mapper.StoreMapper;
+import com.cleaningstore.service.CustomerService;
 import com.cleaningstore.web.bean.condition.SelectCustomerCondition;
 
 @Controller
@@ -24,6 +27,9 @@ public class CustomerController {
 
 	@Autowired
 	StoreMapper storeMapper;
+
+	@Autowired
+	CustomerService service;
 
 	@GetMapping(value = "/allCustomer")
 	public String selectCustomer_get(Map<String, Object> model) {
@@ -50,6 +56,34 @@ public class CustomerController {
 		model.put("customerBean", new CustomerBean());
 		model.put("storeList", storeMapper.selectStore());
 		return "createOrder";
+	}
+
+	@RequestMapping(value = "/createCustomer", method = { RequestMethod.GET, RequestMethod.POST })
+	public String createCustomer(Map<String, Object> model, //
+			@ModelAttribute(name = "cu") CustomerBean cu) {
+
+		if (cu == null || cu.equals(new CustomerBean())) {
+			cu = new CustomerBean();
+		} else {
+			if (service.checkCustomer(cu)) {
+				// insert
+				customerMapper.insertCustomer(cu);
+				model.put("cu", customerMapper.selectInserted(cu.getCustomerName()));
+				model.put("successflg", true);
+			} else {
+				model.put("successflg", false);
+				model.put("cu", cu);
+			}
+		}
+		return "createCustomer";
+	}
+
+	@RequestMapping(value = "/selectCustomer", method = { RequestMethod.GET, RequestMethod.POST })
+	public String selectCustomer(Map<String, Object> model, //
+			@ModelAttribute(name = "cu") CustomerBean cu) {
+		
+		
+		return "selectCustomer";
 	}
 
 }

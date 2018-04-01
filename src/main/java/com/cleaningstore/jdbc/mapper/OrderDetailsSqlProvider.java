@@ -24,7 +24,7 @@ public class OrderDetailsSqlProvider {
 				SET("thingNumber = #{thingNumber}");
 				SET("washWayNumber = #{washWayNumber}");
 				if (isNotEmpty(re.getExpectedDate())) {
-					SET("expectedDate = to_timestamp(#{expectedDate},'yyyy-mm-dd hh24:mi')\"");
+					SET("expectedDate = to_timestamp(#{expectedDate},'yyyy-mm-dd hh24:mi')");
 				}
 				if (isNotEmpty(re.getRealDate())) {
 					SET("realDate = to_timestamp(#{realDate},'yyyy-mm-dd hh24:mi')");
