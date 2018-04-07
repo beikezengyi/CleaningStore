@@ -12,15 +12,32 @@
 </head>
 <body>
 	<div id="includedContent"></div>
-	<form action="#" th:action="@{/allCustomer}" th:object="${cond}"
+	<form action="#" th:action="@{/selectCustomer}" th:object="${cu}"
 		method="post">
 		<p>
-			顾客姓名:<input type="text" th:field="*{name}" name="customerName" />
+			会员番号:<input type="text" th:field="*{customerNumber}"
+				th:value="${customerNumber}" />
 		</p>
 		<p>
-			顾客电话:<input type="text" th:field="*{number}"
-				name="customerPhoneNumber" />
+			顾客姓名:<input type="text" th:field="*{customerName}"
+				th:value="${customerName}" />
 		</p>
+		<p>
+			顾客电话:<input type="text" th:field="*{customerPhoneNumber}"
+				th:value="${customerPhoneNumber}" />
+		</p>
+		<p>
+			顾客性别:<select th:field="*{customerSex}">
+				<option value="0" th:selected="${customerSex} == null"></option>
+				<option value="1" th:selected="${customerSex} == '1'">男士</option>
+				<option value="2" th:selected="${customerSex} == '2'">女士</option>
+				<option value="3" th:selected="${customerSex} == '3'">其他</option>
+			</select>
+		</p>
+		<p>
+			顾客住址:<input type="text" th:field="*{customerAddress}"
+				th:value="${customerAddress}" />
+		</p>		
 		<input type="submit" value="用此条件检索" />
 	</form>
 
@@ -37,18 +54,16 @@
 					<td>顾客性别</td>
 					<td>住址</td>
 					<td>家庭构成人数</td>
-					<td>充值金额</td>
 					<td>账户余额</td>
 				</tr>
 				<tr th:each="cu : ${allCustomer}">
 					<td><a href="#" th:text="${cu.customerNumber}"
-						onclick="selectCustomer(this.innerText)"></a></td>
+						onclick="updateCustomer(this.innerText)"></a></td>
 					<td th:text="${cu.customerName}"></td>
 					<td th:text="${cu.customerPhoneNumber}" />
 					<td th:text="${cu.customerSexStr}" />
 					<td th:text="${cu.customerAddress}" />
 					<td th:text="${cu.customerFamilies}" />
-					<td th:text="${cu.accountPayment}" />
 					<td th:text="${cu.accountBalance}" />
 				</tr>
 			</table>
@@ -60,13 +75,13 @@
 	<script type="text/javascript"
 		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script>
-		function selectCustomer(value) {
-			var linkadd = "/chooseCustomer/" + value;
+		function updateCustomer(value) {
+			var linkadd = "/updateCustomer/" + value;
 			window.location.href = linkadd;
 		}
 		$(function() {
 			$("#includedContent").load("/header");
-		});		
+		});
 	</script>
 </body>
 </html>

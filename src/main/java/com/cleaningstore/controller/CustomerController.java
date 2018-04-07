@@ -1,5 +1,6 @@
 package com.cleaningstore.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.cleaningstore.jdbc.bean.CustomerBean;
 import com.cleaningstore.jdbc.bean.OrderBean;
+import com.cleaningstore.jdbc.bean.PaymentBean;
 import com.cleaningstore.jdbc.mapper.CustomerMapper;
+import com.cleaningstore.jdbc.mapper.PaymentMapper;
 import com.cleaningstore.jdbc.mapper.StoreMapper;
 import com.cleaningstore.service.CustomerService;
 import com.cleaningstore.web.bean.condition.SelectCustomerCondition;
@@ -27,6 +30,9 @@ public class CustomerController {
 
 	@Autowired
 	StoreMapper storeMapper;
+
+	@Autowired
+	PaymentMapper paymentMapper;
 
 	@Autowired
 	CustomerService service;
@@ -68,7 +74,17 @@ public class CustomerController {
 			if (service.checkCustomer(cu)) {
 				// insert
 				customerMapper.insertCustomer(cu);
-				model.put("cu", customerMapper.selectInserted(cu.getCustomerName()));
+				CustomerBean insertedCustomer = customerMapper.selectInserted(cu.getCustomerName());
+				// payment
+				if (cu.getAccountPayment() != null && cu.getAccountPayment() > 0) {
+					PaymentBean py = new PaymentBean();
+					py.setCustomerNumber(insertedCustomer.getCustomerNumber());
+					py.setChargePayment(cu.getAccountPayment());
+					py.setAccountBalanceAtfer(cu.getAccountBalance());
+					py.setPaymentWay(cu.getPaymentWay());
+					paymentMapper.insertPatmentWithCreateUser(py);
+				}
+				model.put("cu", insertedCustomer);
 				model.put("successflg", true);
 			} else {
 				model.put("successflg", false);
@@ -81,9 +97,32 @@ public class CustomerController {
 	@RequestMapping(value = "/selectCustomer", method = { RequestMethod.GET, RequestMethod.POST })
 	public String selectCustomer(Map<String, Object> model, //
 			@ModelAttribute(name = "cu") CustomerBean cu) {
-		
-		
+		List<CustomerBean> allCustomer;
+		if (cu.equals(new CustomerBean())) {
+			allCustomer = new ArrayList<>();
+		} else {
+			allCustomer = customerMapper.selectCustomer(cu);
+		}
+		model.put("cu", cu);
+		model.put("allCustomer", allCustomer);
 		return "selectCustomer";
+	}
+
+	@RequestMapping(value = "/updateCustomer/{id}", method = { RequestMethod.GET, RequestMethod.POST })
+	public String updateCustomer(Map<String, Object> model, //
+			@PathVariable(required = false, value = "id") Integer id, //
+			@ModelAttribute(name = "cu") CustomerBean cu) {
+
+		if (id != null && id != 0) {
+			CustomerBean se = new CustomerBean();
+			se.setCustomerNumber(id);
+			cu = customerMapper.selectOne(id);
+			cu.setAfterCharge(cu.getAccountBalance());
+		} else if (service.checkCustomer(cu)) {
+
+		}
+		model.put("cu", cu);
+		return "updateCustomer";
 	}
 
 }

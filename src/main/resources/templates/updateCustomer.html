@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>新建顾客</title>
+<title>更改顾客信息及充值</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <link rel="stylesheet" type="text/css"
@@ -12,18 +12,28 @@
 </head>
 <body>
 	<div id="includedContent"></div>
-	<div class="container-fluid">
-		<form action="#" th:action="@{/createCustomer}" th:object="${cu}"
+	<div class="container">
+		<form action="#" th:action="@{/updateCustomer}" th:object="${cu}"
 			method="post">
-
-			<ul>
-				<li th:each="msg : ${cu.errormsg}"
-					style="font-style: italic; background-color: red; font-size: large;"
-					th:text="${msg}"></li>
-			</ul>
+			
 			<div class="row">
+				<label class="col-md-1">会员号码:</label> 
+				<input class="col-md-5"
+					type="text" readonly="readonly" th:field="*{customerNumber}" th:text="${customerNumber}" />
 				<label class="col-md-1">顾客姓名:</label> <input class="col-md-5"
-					type="text" required="required" th:field="*{customerName}" th:text="${createCustomer}" />
+					type="text"  readonly="readonly" th:field="*{customerName}" th:text="${createCustomer}" />
+			</div>
+			
+			<div class="row">
+				<label class="col-md-1">现在余额:</label> 
+				<input class="col-md-5" id="nowbal"
+					type="text" readonly="readonly" th:field="*{accountBalance}" th:value="${accountBalance}" />
+			</div>			
+						
+			<div class="row">
+				<label class="col-md-1">家庭地址:</label> <input class="col-md-5"
+					type="text" th:field="*{customerAddress}"
+					th:text="${customerAddress}" />
 				<label class="col-md-1">顾客电话:</label> <input class="col-md-5"
 					type="number" th:field="*{customerPhoneNumber}"
 					th:text="${customerPhoneNumber}" />
@@ -40,15 +50,9 @@
 			</div>
 
 			<div class="row">
-				<label class="col-md-1">家庭地址:</label> <input class="col-md-11"
-					type="text" th:field="*{customerAddress}"
-					th:text="${customerAddress}" />
-			</div>
-
-			<div class="row">
 				<label class="col-md-1">充值金额:</label> <input class="col-md-5"
 					type="number" th:field="*{accountPayment}"
-					th:text="${accountPayment}" onchange="changeChargeValue(false)" /> <label
+					th:text="${accountPayment}" onchange="changeChargeValue(true)" /> <label
 					class="col-md-1">充值方式:</label> <select class="col-md-5"
 					th:field="*{paymentWay}">
 					<option value="现金支付" th:select="${paymentWay} == '现金支付'">现金支付</option>
@@ -63,9 +67,9 @@
 				<label class="col-md-1">选择</label> 
 				<input class="col-md-1"
 					type="radio" th:field="*{freetype}" th:checked="${freetype}"
-					style="width: 30px" value="true" onclick="changeFreeType(this.id,false)" />
+					style="width: 30px" value="true" onclick="changeFreeType(this.id,true)" />
 				<select class="col-md-4" id="freeBalanceSe" style="width: 390px"
-					onchange="changeFreeValue(this.id,false)" th:field="*{freeBalanceSe}">
+					onchange="changeFreeValue(this.id,true)" th:field="*{freeBalanceSe}">
 					<option value="0" th:select="${freeBalanceSe} == '0'">0</option>
 					<option value="10" th:select="${freeBalanceSe} == '10'">10</option>
 					<option value="20" th:select="${freeBalanceSe} == '20'">20</option>
@@ -82,18 +86,18 @@
 				<input class="col-md-1"
 					 type="radio" style="width: 30px"
 					th:field="*{freetype}" th:checked="${freetype}=='false'"
-					value="false" onclick="changeFreeType(this.id,false)" /> 
+					value="false" onclick="changeFreeType(this.id,true)" /> 
 				<input class="col-md-3" style="width: 495px"
 					 type="number" th:value="${freeBalanceIn}"
-					th:field="*{freeBalanceIn}" onchange="changeFreeValue(this.id,false)"
+					th:field="*{freeBalanceIn}" onchange="changeFreeValue(this.id,true)"
 					id="freeBalanceIn" />
 			</div>
 			<div class="row">
 				<label class="col-md-1">本次充值获得金额:</label> <input class="col-md-5"
-					type="number" th:field="*{accountBalance}"
-					th:text="${accountBalance}" readonly="readonly" /> <label
+					type="number"  id="accountBalance"
+					th:value="'0'" readonly="readonly" /> <label
 					class="col-md-1">本次充值后金额:</label> <input class="col-md-5"
-					id="afterCharge" readonly="readonly" type="number" th:value="'0'" />
+					th:field="*{afterCharge}" readonly="readonly" type="number" th:value="'0'" />
 			</div>
 			<div class="row">
 				<input class="col-md-6 col-md-offset-2" type="submit" value="注册新会员" />
@@ -102,38 +106,7 @@
 	</div>
 
 
-	<div class="container">
-		<div class="table-responsive" th:if="${successflg}">
-			<h2>会员注册成功，点击顾客对应的顾客番号可其创建订单。</h2>
-			<table id="customertable" class="table table-bordered table-striped">
-				<thead>
-					<tr>
-						<td>顾客番号</td>
-						<td>顾客名</td>
-						<td>顾客电话</td>
-						<td>顾客性别</td>
-						<td>住址</td>
-						<td>家庭构成人数</td>
-						<td>账户余额</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td><a href="#" th:text="${cu.customerNumber}"
-							onclick="selectCustomer(this.innerText)"></a></td>
-						<td th:text="${cu.customerName}"></td>
-						<td th:text="${cu.customerPhoneNumber}" />
-						<td th:text="${cu.customerSexStr}" />
-						<td th:text="${cu.customerAddress}" />
-						<td th:text="${cu.customerFamilies}" />
-						<td th:text="${cu.accountBalance}" />
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-
-	<script type="text/javascript" src="/webjars/jquery/2.1.4/jquery.js"></script>
+	<script type="text/javascript" src="/webjars/jquery/2.1.4/jquery.min.js"></script>
 	<script type="text/javascript"
 		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="../../js/createCustomer.js"></script>
