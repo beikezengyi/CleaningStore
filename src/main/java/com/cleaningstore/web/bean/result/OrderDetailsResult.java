@@ -69,7 +69,13 @@ public class OrderDetailsResult {
 	private String finishflg;
 
 	private String finishDate;
+	
+	private String payStatus;
 
 	private List<String> errormsg = new ArrayList<>();
+	
+	// 退避
+	private String paymentWay;
+	private Integer accountBalance;
 
 }

@@ -9,13 +9,6 @@
 	href="/webjars/bootstrap-datetimepicker/2.3.5/css/bootstrap-datetimepicker.min.css" />
 <link rel="stylesheet" th:href="@{/css/main.css}"
 	href="../../css/main.css" />
-<style type="text/css">
-.titleLink {
-	display: block;
-	width: 1200px;
-	height: 30px;
-}
-</style>
 </head>
 <body>
 
@@ -68,8 +61,8 @@
 						</ul>
 						<div th:id="${details.cleanThingDetailsNumber}"
 							class="panel-collapse collapse">
-							<div class="panel-body"
-								th:classappend="${#fields.hasErrors('all')}? has-error">
+							<div class="panel-body" 
+							th:classappend="${details.payStatus == '1'} ? readonlyDivSuccess : (${details.deletedFlg == 't'} ? readonlyDivDelete)">
 								<div class="row">
 									<label class="col-md-1">订单号码</label> <input type="hidden"
 										th:value="${details.cleanThingNumber}"
@@ -178,15 +171,34 @@
 										th:field="*{detailsList[__${rowStat.index}__].finishDate}" />
 								</div>
 								<p></p>
+								<div class="row">
+									<label class="col-md-1">支付该订单/订单已完成:</label> 
+									<input class="col-md-2" type="checkbox"  th:field="*{detailsList[__${rowStat.index}__].payStatus}" value="1"/> 
+									<label class="col-md-1">账户余额:</label> 
+									<input class="col-md-2" type="number"
+									 th:field="*{detailsList[__${rowStat.index}__].accountBalance}"
+									 th:value="${details.accountBalance} == null ? '0' :${details.accountBalance}" 
+									readonly="readonly" ></input> 
+									<label class="col-md-1">支付方式:</label> 
+									<select class="col-md-5"
+										th:field="*{detailsList[__${rowStat.index}__].paymentWay}">
+										<option value="现金支付" th:select="${details.paymentWay} == '现金支付'">现金支付</option>
+										<option value="账户余额支付" th:select="${details.paymentWay} == '账户余额支付'">账户余额支付</option>
+										<option value="微信支付" th:select="${details.paymentWay} == '微信支付'">微信支付</option>
+										<option value="支付宝支付" th:select="${details.paymentWay} == '支付宝支付'">支付宝支付</option>
+										<option value="银行卡转账" th:select="${details.paymentWay} == '银行卡转账'">银行卡转账</option>
+										<option value="其他支付途径" th:select="${details.paymentWay} == '其他支付途径'">其他支付途径</option>
+									</select>
+								</div>
 							</div>
 						</div>
 					</div>
 				</td>
 			</tr>
 		</table>
-		<p>
-			<input style="float: center;" type="submit" value="提交更改" />
-		</p>
+		<div class="row">
+			<input class="col-md-5 col-md-offset-2" type="submit" value="提交更改" />
+		</div>
 	</form>
 	<script type="text/javascript" src="/webjars/jquery/2.1.4/jquery.js"></script>
 	<script type="text/javascript"
@@ -196,25 +208,5 @@
 	<script type="text/javascript"
 		src="../../js/bootstrap-datetimepicker.zh-CN.js"></script>
 	<script src="../../js/welcome.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			$("#includedContent").load("/header");
-		});
-		$('.datetimepicker').datetimepicker({
-			language : 'zh-CN',
-			autoclose : true,
-			todayHighlight : true
-		})
-		function changeColor(id, selectValue) {
-			var index = id.substring(11, 12);
-
-			var divid = "div" + index;
-			if (selectValue == "t") {
-				$("#" + divid).attr("style", "background-color: #d7dde5;");
-			} else {
-				$("#" + divid).attr("style", "background-color: #FFF;");
-			}
-		}
-	</script>
 </body>
 </html>

@@ -7,13 +7,23 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cleaningstore.jdbc.bean.CustomerBean;
+import com.cleaningstore.jdbc.mapper.CustomerMapper;
+import com.cleaningstore.jdbc.mapper.OrderDetailsMapper;
 import com.cleaningstore.web.bean.result.OrderDetailsResult;
 import com.cleaningstore.web.bean.result.YesNoBean;
 
 @Service
 public class OrderDetailsService {
+
+	@Autowired
+	CustomerMapper customerMapper;
+
+	@Autowired
+	OrderDetailsMapper orderDetailsMapper;
 
 	public List<YesNoBean> createYesNo() {
 		YesNoBean bean1 = new YesNoBean();
@@ -30,10 +40,13 @@ public class OrderDetailsService {
 
 	public void createNewData(int orderNumber, List<OrderDetailsResult> detailsList) {
 		int detailNumber;
+		Integer accountBal = null;
 		if (detailsList.isEmpty()) {
 			detailNumber = 1;
+			accountBal = customerMapper.selectOneWithOrderNumber(orderNumber).getAccountBalance();
 		} else {
 			detailNumber = detailsList.get(detailsList.size() - 1).getCleanThingDetailsNumber() + 1;
+			accountBal = detailsList.get(0).getAccountBalance();
 		}
 		OrderDetailsResult defaultData1 = new OrderDetailsResult();
 		defaultData1.setCleanThingNumber(orderNumber);
@@ -41,6 +54,9 @@ public class OrderDetailsService {
 		defaultData1.setCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 		defaultData1.setCreated(false);
 		defaultData1.setToinsert(false);
+		if (accountBal != null) {
+			defaultData1.setAccountBalance(accountBal);
+		}
 		OrderDetailsResult defaultData2 = new OrderDetailsResult();
 		BeanUtils.copyProperties(defaultData1, defaultData2);
 		defaultData2.setCleanThingDetailsNumber(detailNumber + 1);
@@ -48,10 +64,15 @@ public class OrderDetailsService {
 		detailsList.add(defaultData2);
 	}
 
-	public boolean checkResult(List<OrderDetailsResult> detailsList) {
+	public boolean checkResult(List<OrderDetailsResult> detailsList, Integer orderNumber,
+			List<OrderDetailsResult> dbCurrent) {
 
 		for (OrderDetailsResult eachDe : detailsList) {
-			if ((eachDe.isCreated() && !eachDe.getDeletedFlg().equals("t")) || eachDe.isToinsert()) {
+			int dbStatus = checkStatus(dbCurrent, eachDe);
+
+			if ((dbStatus != 2 && dbStatus != 3 // 已删除及已支付不检查入力值
+					&& eachDe.isCreated() && !eachDe.getDeletedFlg().equals("t")) //
+					|| eachDe.isToinsert()) {
 
 				if (!isNotEmpty(eachDe.getCleanThingNumber())) {
 					eachDe.getErrormsg().add("订单号码不存在！");
@@ -84,6 +105,31 @@ public class OrderDetailsService {
 						eachDe.getErrormsg().add("消除旗帜为是的场合请添加消除日期！");
 					}
 				}
+				if (isNotEmpty(eachDe.getPayStatus()) && eachDe.getPayStatus().equals("1")
+						&& isNotEmpty(eachDe.getDeletedFlg()) && !eachDe.getDeletedFlg().equals("t")) {
+					// 支付订单
+					if (!isNotEmpty(eachDe.getFinishDate()) //
+							|| !isNotEmpty(eachDe.getFinishflg())//
+							|| eachDe.getFinishflg().equals("f") //
+							|| !isNotEmpty(eachDe.getRealDate())) {
+						eachDe.getErrormsg().add("支付订单前请先完成订单！(更新完成旗帜,完成日期及实际交付日。)");
+					}
+					if (eachDe.getPaymentWay().equals("账户余额支付")) {
+						CustomerBean cus = customerMapper.selectOneWithOrderNumber(orderNumber);
+						int accountbal = cus.getAccountBalance() == null ? 0 : cus.getAccountBalance();
+						if ((accountbal - eachDe.getThingPrice()) < 0) {
+							eachDe.getErrormsg().add("顾客 " + cus.getCustomerName() + " 当前账户余额不足以支付本次订单，请充值或选择其他支付方式！");
+							eachDe.setAccountBalance(cus.getAccountBalance());
+						}
+					}
+				} else if (isNotEmpty(eachDe.getPayStatus())) {
+					eachDe.getErrormsg().add("不能支付要删除的订单。");
+				}
+			}
+			if (eachDe.getErrormsg().size() > 0) {
+				eachDe.setPayStatus("0");
+				eachDe.setDeletedFlg("f");
+				eachDe.setDeletedDate(null);
 			}
 		}
 		return detailsList.stream().filter(s -> s.getErrormsg().size() > 0).count() == 0;
@@ -103,5 +149,32 @@ public class OrderDetailsService {
 		}
 
 		return false;
+	}
+
+	/**
+	 * 
+	 * @param dbCurrent
+	 * @param pagebean
+	 * @return 0:不存在，1:存在未支付，2:存在已支付,3:已删除
+	 */
+	public int checkStatus(List<OrderDetailsResult> dbCurrent, OrderDetailsResult pagebean) {
+
+		OrderDetailsResult hasbean = null;
+		for (OrderDetailsResult dbcu : dbCurrent) {
+			if (dbcu.getCleanThingNumber().equals(pagebean.getCleanThingNumber())
+					&& dbcu.getCleanThingDetailsNumber().equals(pagebean.getCleanThingDetailsNumber())) {
+				hasbean = dbcu;
+				break;
+			}
+		}
+		if (hasbean == null) {
+			return 0;
+		} else if (hasbean.getPayStatus() != null && hasbean.getPayStatus().equals("1")) {
+			return 2;
+		} else if (hasbean.getDeletedFlg() != null && hasbean.getDeletedFlg().equals("t")) {
+			return 3;
+		} else {
+			return 1;
+		}
 	}
 }

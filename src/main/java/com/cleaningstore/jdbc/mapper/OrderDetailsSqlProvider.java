@@ -45,6 +45,9 @@ public class OrderDetailsSqlProvider {
 				if (isNotEmpty(re.getFinishDate())) {
 					SET("finishDate = to_timestamp(#{finishDate},'yyyy-mm-dd hh24:mi')");
 				}
+				if (isNotEmpty(re.getPayStatus())) {
+					SET("payStatus = #{payStatus}");
+				}
 				WHERE("cleanThingNumber = #{cleanThingNumber}");
 				WHERE("cleanThingDetailsNumber = #{cleanThingDetailsNumber}");
 			}
@@ -90,6 +93,9 @@ public class OrderDetailsSqlProvider {
 				VALUES("finishflg", "#{finishflg}::boolean");
 				if (isNotEmpty(re.getFinishDate())) {
 					VALUES("finishDate", "to_timestamp(#{finishDate},'yyyy-mm-dd hh24:mi')");
+				}
+				if (isNotEmpty(re.getPayStatus())) {
+					VALUES("payStatus", "#{payStatus}");
 				}
 			}
 		}.toString();

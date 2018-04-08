@@ -8,4 +8,6 @@ import lombok.Setter;
 public class Greeting {
     private long id;
     private String content;
+    private Boolean choose;
+    private String checkbox;
 }

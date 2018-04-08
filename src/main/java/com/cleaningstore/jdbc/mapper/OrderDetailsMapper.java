@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.springframework.stereotype.Repository;
 
@@ -16,9 +17,11 @@ import com.cleaningstore.web.bean.result.OrderDetailsResult;
 public interface OrderDetailsMapper {
 
 	@Select(value = "select " //
-			+ " orderdetailstable.cleanThingNumber,"//
+			+ " t1.cleanThingNumber,"//
 			+ " cleanThingDetailsNumber,"//
-			+ " true as created," + " false as toinsert," + " to_char(createDate,'yyyy-mm-dd hh:mi') as createDate,"//
+			+ " true as created," //
+			+ " false as toinsert," //
+			+ " to_char(t1.createDate,'yyyy-mm-dd hh:mi') as createDate,"//
 			+ " otherName,"//
 			+ " washCount,"//
 			+ " washUnit,"//
@@ -33,16 +36,27 @@ public interface OrderDetailsMapper {
 			+ " deletedFlg,"//
 			+ " to_char(deletedDate,'yyyy-mm-dd hh:mi') as deletedDate,"//
 			+ " finishFlg,"//
-			+ " to_char(finishDate,'yyyy-mm-dd hh:mi') as finishDate"//
-			+ " from orderdetailstable " + " left outer join ordertable"
-			+ " on(ordertable.cleanThingNumber=orderdetailstable.cleanThingNumber)"
-			+ " where ordertable.ordernumber = #{ordernumber}"//
-			+ " order by cleanthingnumber asc,cleanthingdetailsnumber asc;")
+			+ " to_char(finishDate,'yyyy-mm-dd hh:mi') as finishDate,"//
+			+ " payStatus," //
+			+ " accountBalance"
+			+ " from orderdetailstable as t1" //
+			+ " left outer join ordertable as t2"//
+			+ " on(t1.cleanThingNumber=t2.cleanThingNumber)"
+			+ " left outer join customertable as t3"//
+			+ " on(t2.customernumber=t3.customernumber)"			
+			+ " where t2.ordernumber = #{ordernumber}"//
+			+ " order by t1.cleanthingnumber asc,t1.cleanthingdetailsnumber asc;")
 	public List<OrderDetailsResult> selectOrderDetails(@Param(value = "ordernumber") int ordernumber);
 
 	@UpdateProvider(type = OrderDetailsSqlProvider.class, method = "updateOrderDetails")
 	public int updateOrderDetails(OrderDetailsResult re);
 
 	@InsertProvider(type = OrderDetailsSqlProvider.class, method = "insertOrderDetails")
-	public int insertOrderDetails(OrderDetailsResult re);	
+	public int insertOrderDetails(OrderDetailsResult re);
+
+	@Update(value = "update orderdetailstable"//
+			+ " set paystatus ='1'"//
+			+ " where cleanThingNumber=#{cleanThingNumber} and"//
+			+ " cleanThingDetailsNumber=#{cleanThingDetailsNumber}")
+	public int updatePayStatus(@Param(value = "re") OrderDetailsResult re);
 }

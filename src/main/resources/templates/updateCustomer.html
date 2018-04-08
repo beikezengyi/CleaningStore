@@ -13,8 +13,8 @@
 <body>
 	<div id="includedContent"></div>
 	<div class="container">
-		<form action="#" th:action="@{/updateCustomer}" th:object="${cu}"
-			method="post">
+		<form action="#" th:action="@{/updateCustomer/0}" 
+		th:object="${cu}" method="post">
 			
 			<div class="row">
 				<label class="col-md-1">会员号码:</label> 
@@ -68,7 +68,7 @@
 				<input class="col-md-1"
 					type="radio" th:field="*{freetype}" th:checked="${freetype}"
 					style="width: 30px" value="true" onclick="changeFreeType(this.id,true)" />
-				<select class="col-md-4" id="freeBalanceSe" style="width: 390px"
+				<select class="col-md-4" id="freeBalanceSe" style="width: 350px"
 					onchange="changeFreeValue(this.id,true)" th:field="*{freeBalanceSe}">
 					<option value="0" th:select="${freeBalanceSe} == '0'">0</option>
 					<option value="10" th:select="${freeBalanceSe} == '10'">10</option>
@@ -87,7 +87,7 @@
 					 type="radio" style="width: 30px"
 					th:field="*{freetype}" th:checked="${freetype}=='false'"
 					value="false" onclick="changeFreeType(this.id,true)" /> 
-				<input class="col-md-3" style="width: 495px"
+				<input class="col-md-3" style="width: 450px"
 					 type="number" th:value="${freeBalanceIn}"
 					th:field="*{freeBalanceIn}" onchange="changeFreeValue(this.id,true)"
 					id="freeBalanceIn" />
@@ -100,11 +100,44 @@
 					th:field="*{afterCharge}" readonly="readonly" type="number" th:value="'0'" />
 			</div>
 			<div class="row">
-				<input class="col-md-6 col-md-offset-2" type="submit" value="注册新会员" />
+				<input class="col-md-6 col-md-offset-2" type="submit"
+				onclick="alertCharge()" value="更改会员信息或充值" />
 			</div>
 		</form>
 	</div>
 
+	<div class="container">
+		<div class="table-responsive" th:if="${successFlg}">
+			<h2>会员信息更新成功。</h2>
+			<h3 th:if="${chargeflg}">充值成功。</h3>
+			<h3>点击顾客对应的顾客番号可其创建订单。</h3>
+			<table id="customertable" class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<td>顾客番号</td>
+						<td>顾客名</td>
+						<td>顾客电话</td>
+						<td>顾客性别</td>
+						<td>住址</td>
+						<td>家庭构成人数</td>
+						<td>账户余额</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><a href="#" th:text="${cu.customerNumber}"
+							onclick="selectCustomer(this.innerText)"></a></td>
+						<td th:text="${cu.customerName}"></td>
+						<td th:text="${cu.customerPhoneNumber}" />
+						<td th:text="${cu.customerSexStr}" />
+						<td th:text="${cu.customerAddress}" />
+						<td th:text="${cu.customerFamilies}" />
+						<td th:text="${cu.accountBalance}" />
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 	<script type="text/javascript" src="/webjars/jquery/2.1.4/jquery.min.js"></script>
 	<script type="text/javascript"

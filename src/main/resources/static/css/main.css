@@ -7,9 +7,7 @@ h2 {
 }
 
 [type="date"] {
-	background: #fff
-		url(../pic/calendar_2.png)
-		97% 50% no-repeat;
+	background: #fff url(../pic/calendar_2.png) 97% 50% no-repeat;
 }
 
 [type="date"]::-webkit-inner-spin-button {
@@ -19,7 +17,6 @@ h2 {
 [type="date"]::-webkit-calendar-picker-indicator {
 	opacity: 0;
 }
-
 
 /* custom styles */
 body {
@@ -54,4 +51,20 @@ select {
 
 center {
 	margin: auto;
+}
+
+.readonlyDivSuccess {
+	background-color: #f5e79e;
+	pointer-events: none;
+}
+
+.readonlyDivDelete {
+	background-color: #8c8c8c;
+	pointer-events: none;
+}
+
+.titleLink {
+	display: block;
+	width: 1300px;
+	height: 30px;
 }

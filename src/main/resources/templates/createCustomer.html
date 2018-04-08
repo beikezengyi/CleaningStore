@@ -91,7 +91,7 @@
 			<div class="row">
 				<label class="col-md-1">本次充值获得金额:</label> <input class="col-md-5"
 					type="number" th:field="*{accountBalance}"
-					th:text="${accountBalance}" readonly="readonly" /> <label
+					th:value="${successflg} == true ? 0 : ${accountBalance}" readonly="readonly" /> <label
 					class="col-md-1">本次充值后金额:</label> <input class="col-md-5"
 					id="afterCharge" readonly="readonly" type="number" th:value="'0'" />
 			</div>

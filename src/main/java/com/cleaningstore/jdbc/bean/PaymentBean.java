@@ -23,5 +23,8 @@ public class PaymentBean {
 	private String paymengtMemo;
 	private String paymentdate;
 	
-	
+	//退避
+	private Integer accountBalance;
+	private Integer accountPayment;
+	private Integer afterCharge;
 }

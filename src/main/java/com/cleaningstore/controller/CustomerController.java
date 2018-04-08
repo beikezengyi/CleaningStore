@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -118,8 +119,17 @@ public class CustomerController {
 			se.setCustomerNumber(id);
 			cu = customerMapper.selectOne(id);
 			cu.setAfterCharge(cu.getAccountBalance());
-		} else if (service.checkCustomer(cu)) {
-
+		} else if (service.checkUpdateCustomer(cu)) {
+			customerMapper.updateCustomer(cu);
+			if (cu.getAccountPayment()!=null && 
+					cu.getAccountPayment() > 0) {
+				PaymentBean py = new PaymentBean();
+				BeanUtils.copyProperties(cu, py);
+				paymentMapper.insertPatmentWithCharge(py);
+				model.put("chargeflg", true);
+			}
+			model.put("successFlg", true);
+			cu = customerMapper.selectOne(cu.getCustomerNumber());
 		}
 		model.put("cu", cu);
 		return "updateCustomer";

@@ -47,14 +47,14 @@ public class CustomerSqlProvider {
 					SET("customerSex = #{customerSex}");
 				}
 				if (utils.isExist(cu.getCustomerAddress())) {
-					WHERE("customerAddress = #{customerAddress}");
+					SET("customerAddress = #{customerAddress}");
 				}
 				if (utils.isExist(cu.getCustomerFamilies())) {
-					WHERE("customerfamilies = #{customerfamilies}");
+					SET("customerFamilies = #{customerFamilies}");
 				}
-				if (utils.isExist(cu.getCustomerAddress())) {
-					WHERE("customerAddress = #{customerAddress}");
-				}				
+				if (utils.isExist(cu.getAfterCharge())) {
+					SET("accountbalance = #{afterCharge}");
+				}
 				WHERE("customerNumber = #{customerNumber}");
 			}
 

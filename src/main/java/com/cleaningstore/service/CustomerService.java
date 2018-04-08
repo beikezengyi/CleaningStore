@@ -37,5 +37,24 @@ public class CustomerService {
 		return customerBean.getErrormsg().size() == 0;
 	}
 	
+	public boolean checkUpdateCustomer(CustomerBean customerBean) {
+
+		if (!utils.isExist(customerBean.getCustomerName())) {
+			customerBean.getErrormsg().add("请输入顾客的名字！");
+		}
+		if (utils.isExist(customerBean.getCustomerPhoneNumber())) {
+			String phone = customerBean.getCustomerPhoneNumber();
+			if (phone.length() != 11) {
+				customerBean.getErrormsg().add("顾客的手机号码不是11位！");
+			} else if (!utils.checkPhoneNumber(phone)) {
+				customerBean.getErrormsg().add("顾客的手机号码不是一个正确的格式！");
+			}
+		}
+		if (!utils.isExist(customerBean.getCustomerSex())) {
+			customerBean.getErrormsg().add("请选择顾客的性别！");
+		}
+		return customerBean.getErrormsg().size() == 0;
+	}	
+	
 
 }
