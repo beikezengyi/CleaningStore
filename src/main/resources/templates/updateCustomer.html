@@ -11,7 +11,7 @@
 	href="../../css/main.css" />
 </head>
 <body>
-	<div id="includedContent"></div>
+	<div th:include="header"></div>
 	<div class="container">
 		<form action="#" th:action="@{/updateCustomer/0}" 
 		th:object="${cu}" method="post">
@@ -143,10 +143,5 @@
 	<script type="text/javascript"
 		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="../../js/createCustomer.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			$("#includedContent").load("/header");
-		});
-	</script>
 </body>
 </html>

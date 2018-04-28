@@ -11,17 +11,22 @@
 	href="../../css/main.css" />
 </head>
 <body>
-	<div id="includedContent"></div>
+	<div th:include="header"></div>
 	<form action="#" th:action="@{/allCustomer}" th:object="${cond}"
 		method="post">
-		<p>
-			顾客姓名:<input type="text" th:field="*{name}" name="customerName" />
-		</p>
-		<p>
-			顾客电话:<input type="text" th:field="*{number}"
+		<div class="row">
+			<label class="col-md-2">顾客姓名:</label>
+			<input class="col-md-4" type="text" th:field="*{name}" 
+				name="customerName" />
+		</div>
+		<div class="row">
+			<label class="col-md-2">顾客电话:</label>
+			<input class="col-md-4" type="text" th:field="*{number}"
 				name="customerPhoneNumber" />
-		</p>
-		<input type="submit" value="用此条件检索" />
+		</div>
+		<div class="row">
+			<input  class="col-md-3 col-md-offset-2" type="submit" value="用此条件检索" />
+		</div>
 	</form>
 
 	<div class="container">
@@ -42,8 +47,9 @@
 				</tr>
 				<tr th:each="cu : ${allCustomer}">
 					<td><a href="#" th:text="${cu.customerNumber}"
+						onclick="getCustomerInfo(this.innerText)"></a></td>
+					<td ><a href="#" th:text="${cu.customerName}"
 						onclick="selectCustomer(this.innerText)"></a></td>
-					<td th:text="${cu.customerName}"></td>
 					<td th:text="${cu.customerPhoneNumber}" />
 					<td th:text="${cu.customerSexStr}" />
 					<td th:text="${cu.customerAddress}" />
@@ -60,13 +66,14 @@
 	<script type="text/javascript"
 		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script>
+		function getCustomerInfo(value) {
+			var linkadd = "/chooseCustomer/" + value;
+			window.location.href = linkadd;
+		}	
 		function selectCustomer(value) {
 			var linkadd = "/chooseCustomer/" + value;
 			window.location.href = linkadd;
 		}
-		$(function() {
-			$("#includedContent").load("/header");
-		});		
 	</script>
 </body>
 </html>

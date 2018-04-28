@@ -8,71 +8,75 @@
 	href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
 <link rel="stylesheet" th:href="@{/css/main.css}"
 	href="../../css/main.css" />
+<style type="text/css">
+table tr th {
+	width: 25%;
+}
+</style>
 </head>
 <body>
 
-	<div id="includedContent"></div>
-	<form id="createform" action="#"
-		th:action="@{/createOrderwithid(id=${choosedCustomer.customerNumber})}"
+	<div th:include="header"></div>
+	<form id="createform" action="#" th:action="@{/createOrder}"
 		th:object="${orderBean}" method="post">
 
 		<ul th:if="${checkerror} != null">
 			<li th:if="${checkerror}"
-				style="font-style: italic; background-color: red; font-size: large;"
+				style="font-style: italic; color: red; font-size: large;"
 				th:text="'请点击放大镜查找顾客!'"></li>
 		</ul>
-		<p>
-			下单顾客姓名:<input type="text" id="customerName" name="customerName"
-				readonly="readonly" th:value="${choosedCustomer.customerName}" /> <img
-				alt="检索" src="../../pic/search.jpg" height="20px" width="20px"
-				onclick="search()" /> <span id="customerNumber"
-				th:value="${choosedCustomer.customerNumber}"></span>
-		</p>
-		<p></p>
-		<p>
-			接单店铺名: <select th:field="*{storeNumber}">
+		<div class="row">
+			<label class="col-md-2">下单顾客姓名:</label> <input class="col-md-4"
+				type="text" th:field="*{customerName}" th:value="${customerName}" />
+			<img alt="检索" src="../../pic/search.jpg" height="20px" width="20px"
+				onclick="search()" /> <span class="col-md-3" id="customerNameMsg"></span>
+		</div>
+		<div>
+			<input type="hidden" th:field="*{customerNumber}"
+				th:value="${customerNumber}" />
+		</div>
+		<div class="row">
+			<label class="col-md-2">接单店铺名: </label> <select class="col-md-4"
+				th:field="*{storeNumber}">
 				<option th:each="store : ${storeList}"
 					th:value="${store.storeNumber}" th:text="${store.storeName}"></option>
 			</select>
-		</p>
-
-		<input type="submit" value="创建订单" />
+		</div>
+		<div class="row">
+			<input class="col-md-3 col-md-offset-3" type="submit" value="创建订单"
+				id="createordercommit" />
+		</div>
 	</form>
-	<p></p>
-	<p></p>
-	<p></p>
-	<p></p>
 	<p></p>
 	<form action="#" th:if="${inertedBean} != null">
 		<p style="color: red">订单创建成功</p>
-		<table border="1">
-			<tr>
-				<td>订单号码</td>
-				<td>下单顾客</td>
-				<td>接单店铺</td>
-				<td>接单时间</td>
-			</tr>
-			<tr>
-				<td><a href="#" th:text="${inertedBean.orderNumber}"
-					onclick="goOrderDetails(this.innerText)"></a></td>
-				<td><input type="text" readonly="readonly" style="width: 100px"
-					th:value="${inertedBean.customerName}" /></td>
-				<td><input type="text" readonly="readonly" style="width: 150px"
-					th:value="${inertedBean.storeName}" /></td>
-				<td><input type="text" readonly="readonly" style="width: 200px"
-					th:value="${inertedBean.orderCreateDateStr}" /></td>
-			</tr>
+		<table border="1" class="table">
+			<thead>
+				<tr>
+					<td class="col-md-3">订单号码</td>
+					<td class="col-md-3">下单顾客</td>
+					<td class="col-md-3">接单店铺</td>
+					<td class="col-md-3">接单时间</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><a href="#" th:text="${inertedBean.orderNumber}"
+						onclick="goOrderDetails(this.innerText)"></a></td>
+					<td><input type="text" readonly="readonly"
+						th:value="${inertedBean.customerName}" /></td>
+					<td><input type="text" readonly="readonly"
+						th:value="${inertedBean.storeName}" /></td>
+					<td><input type="text" readonly="readonly"
+						th:value="${inertedBean.orderCreateDateStr}" /></td>
+				</tr>
+			</tbody>
 		</table>
 
 	</form>
 	<script type="text/javascript" src="/webjars/jquery/2.1.4/jquery.js"></script>
 	<script type="text/javascript"
 		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="../../js/createOrder.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			$("#includedContent").load("/header");
-		});
-	</script>
+	<script src="/static/js/createOrder.js" th:src="@{/js/createOrder.js}"></script>
 </body>
 </html>

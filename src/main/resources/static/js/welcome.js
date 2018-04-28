@@ -19,15 +19,18 @@ function selectCustomer(){
 	window.location.href='/selectCustomer';
 }
 
-$(function() {
-	$("#includedContent").load("/header");
+$('#updateWashWay').click(function(){
+	window.location.href='/washWaySetting';
 });
-
-$('.datetimepicker').datetimepicker({
-	language : 'zh-CN',
-	autoclose : true,
-	todayHighlight : true
-})
+$('#createWashWay').click(function(){
+	window.location.href='/createWashWaySetting';
+});
+$('#updateThing').click(function(){
+	window.location.href='/thingSetting';
+});
+$('#createThing').click(function(){
+	window.location.href='/createThingSetting';
+});
 
 function changeColor(id, selectValue) {
 	var index = id.substring(11, 12);
@@ -43,3 +46,6 @@ function changeColor(id, selectValue) {
 $(document).ready(function() {
     $('.readonly').find('input, textarea, select').attr('readonly', 'readonly');
 });
+
+
+

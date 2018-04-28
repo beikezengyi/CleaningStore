@@ -9,7 +9,8 @@ import lombok.ToString;
 @ToString
 public class WashWayBean {
 
-	private int washWayNumber;
+	private boolean checked;
+	private Integer washWayNumber;
 	private String washWayName;
-
+	private Integer sortNumber;
 }

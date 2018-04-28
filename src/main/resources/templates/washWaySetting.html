@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>订单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet" th:href="@{/css/main.css}"
+	href="../../css/main.css" />
+</head>
+<body>
+	<div th:include="header"></div>
+	<div class="container">
+		<form action="#" th:action="@{/washWaySetting}" th:object="${setting}"
+			method="post">
+			<ul>
+				<li th:each="m:${msg}" th:value="${m}"></li>
+			</ul>
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr class="row">
+						<td class="col-md-2">选中删除</td>
+						<td class="col-md-2">番号</td>
+						<td class="col-md-4">排序号码(降序)</td>
+						<td class="col-md-4">套餐名</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="row" th:each="wy,rowStat : ${setting.wylist}">
+						<td><input type="checkbox" value="true"
+							th:field="*{wylist[__${rowStat.index}__].checked}" /></td>
+						<td><input type="number" readonly="readonly"
+							th:value="${wy.washWayNumber}"
+							th:field="*{wylist[__${rowStat.index}__].washWayNumber}" /></td>
+						<td><input type="number" th:value="${wy.sortNumber}"
+							th:field="*{wylist[__${rowStat.index}__].sortNumber}"
+							maxlength="" /></td>
+						<td><input type="text" th:value="${wy.washWayName}"
+							th:field="*{wylist[__${rowStat.index}__].washWayName}" /></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="row">
+				<input type="submit" value="提交更改" />
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="/webjars/jquery/2.1.4/jquery.js"></script>
+	<script type="text/javascript"
+		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="/static/js/createOrder.js" th:src="@{/js/createOrder.js}"></script>
+</body>
+</html>

@@ -4,7 +4,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,27 +25,24 @@ public class CreateOrderController {
 	@Autowired
 	OrderMapper orderMapper;
 
-	@RequestMapping(value = "/createOrder", method = RequestMethod.GET)
+	@GetMapping(value = "/createOrder")
 	public String createOrder_get(Map<String, Object> model) {
 		OrderBean orderBean = new OrderBean();
 		model.put("orderBean", orderBean);
-		model.put("customerBean", new CustomerBean());
 		model.put("storeList", storeMapper.selectStore());
-		model.put("choosedCustomer", new CustomerBean());
 		return "createOrder";
 	}
 
-	@RequestMapping(value = "/createOrderwithid", method = RequestMethod.POST)
+	@PostMapping(value = "/createOrder")
 	public String createOrder_post(Map<String, Object> model, // ) {
-			@ModelAttribute OrderBean orderBean, //
-			@RequestParam(value = "id", required = false) Integer id) {
-		// , @ModelAttribute CustomerBean customerBean
+			@ModelAttribute OrderBean orderBean) {
 
+		Integer id = orderBean.getCustomerNumber();
 		if (id != null && id != 0) {
 			orderBean.setCustomerNumber(id);
 			orderMapper.insertOrder(orderBean);
 			OrderBean inertedBean = orderMapper.selectMonestNew();
-			model.put("inertedBean", inertedBean);			
+			model.put("inertedBean", inertedBean);
 		} else {
 			model.put("checkerror", true);
 		}

@@ -8,8 +8,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ThingBean {
-
-	private int thingNumber;
+	
+	private Boolean checked;
+	private Integer thingNumber;
 	private String thingName;
+	private Integer sortNumber;
 
 }

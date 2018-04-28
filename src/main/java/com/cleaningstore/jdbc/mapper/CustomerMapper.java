@@ -62,4 +62,7 @@ public interface CustomerMapper {
 			+ "(select customerNumber from ordertable where ordernumber=#{orderNumber})")
 	public int updateCustomerPaied(@Param(value = "orderNumber") Integer orderNumber,
 			@Param(value = "price") Integer price);
+
+	@Select(value = "select customernumber from customertable where customername=#{name}")
+	public Integer checkCustomerName(@Param(value = "name") String name);
 }

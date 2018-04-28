@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cleaningstore.jdbc.bean.CustomerBean;
 import com.cleaningstore.jdbc.bean.OrderBean;
@@ -53,14 +55,12 @@ public class CustomerController {
 		return "allCustomer";
 	}
 
-	@GetMapping(value = "/chooseCustomer/{id}")
+	@GetMapping(value = "/chooseCustomer/{name}")
 	public String chooseCustomer(Map<String, Object> model, //
-			@PathVariable(value = "id") int id) {
-
-		CustomerBean cond = customerMapper.selectOne(id);
-		model.put("choosedCustomer", cond);
-		model.put("orderBean", new OrderBean());
-		model.put("customerBean", new CustomerBean());
+			@PathVariable(value = "name") String customerName) {
+		OrderBean orderBean = new OrderBean();
+		orderBean.setCustomerName(customerName);
+		model.put("orderBean", orderBean);
 		model.put("storeList", storeMapper.selectStore());
 		return "createOrder";
 	}
@@ -121,8 +121,7 @@ public class CustomerController {
 			cu.setAfterCharge(cu.getAccountBalance());
 		} else if (service.checkUpdateCustomer(cu)) {
 			customerMapper.updateCustomer(cu);
-			if (cu.getAccountPayment()!=null && 
-					cu.getAccountPayment() > 0) {
+			if (cu.getAccountPayment() != null && cu.getAccountPayment() > 0) {
 				PaymentBean py = new PaymentBean();
 				BeanUtils.copyProperties(cu, py);
 				paymentMapper.insertPatmentWithCharge(py);
@@ -133,6 +132,13 @@ public class CustomerController {
 		}
 		model.put("cu", cu);
 		return "updateCustomer";
+	}
+
+	@PostMapping(value = "/checkCustomer")
+	@ResponseBody
+	public Integer checkCustomer(@RequestParam(value = "name") String customerNmae) {
+		Integer customerNumber = customerMapper.checkCustomerName(customerNmae);
+		return customerNumber == null ? 0 : customerNumber;
 	}
 
 }

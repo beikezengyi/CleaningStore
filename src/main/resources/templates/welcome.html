@@ -5,36 +5,45 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <link rel="stylesheet" type="text/css"
-	href="webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+	href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
 
 <link rel="stylesheet" th:href="@{/css/main.css}"
 	href="../../css/main.css" />
 </head>
 <body>
-	<div id="includedContent"></div>
+	<div id="container">
+		<canvas id="star"></canvas>
+	</div>
 
 	<div class="container">
-		<div class="row">
-			<label class="col-md-3 col-md-offset-5">订单管理</label>
-		</div>
-		<div class="row">
-			<button type="submit" class="btn btn-info col-md-4" onclick="order()">订单查询</button>
-			<button type="submit" class="btn btn-info col-md-4 col-md-offset-4"
-				onclick="createOrder()">新建订单</button>
-		</div>
-		
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<a data-toggle="collapse" data-parent="#accordion"
-						href="#collapseTwo"> 顾客管理 </a>
+						href="#collapseOne">订单管理 </a>
 				</h4>
 			</div>
-			<div id="collapseTwo" class="panel-collapse collapse">
+			<div id="collapseOne" class="panel-collapse collapse row">
 				<div class="panel-body">
-					<button type="button" class="btn btn-info"
+					<button type="submit" class="btn btn-info col-md-3 col-md-offset-1"
+						onclick="order()">订单查询</button>
+					<button type="submit" class="btn btn-info col-md-3 col-md-offset-3"
+						onclick="createOrder()">新建订单</button>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+					<a data-toggle="collapse" data-parent="#accordion"
+						href="#collapseTwo">顾客管理 </a>
+				</h4>
+			</div>
+			<div id="collapseTwo" class="panel-collapse collapse row">
+				<div class="panel-body">
+					<button type="button" class="btn btn-info col-md-3 col-md-offset-1"
 						onclick="createCustomer()">新建顾客</button>
-					<button type="button" class="btn btn-info"
+					<button type="button" class="btn btn-info col-md-3 col-md-offset-3"
 						onclick="selectCustomer()">顾客查询</button>
 				</div>
 			</div>
@@ -43,26 +52,29 @@
 			<div class="panel-heading">
 				<h4 class="panel-title">
 					<a data-toggle="collapse" data-parent="#accordion"
-						href="#collapseThree"> 店铺设置 </a>
+						href="#collapseThree">店铺设置 </a>
 				</h4>
 			</div>
 			<div id="collapseThree" class="panel-collapse collapse">
 				<div class="panel-body">
-					<button type="button" class="btn btn-info">衣 物 注 册</button>
-					<button type="button" class="btn btn-info">洗衣途径注册</button>
+					<div class="row">
+						<button type="button" id="createThing"
+							class="btn btn-info col-md-3 col-md-offset-1">衣 物 注 册</button>
+						<button type="button" id="createWashWay"
+							class="btn btn-info col-md-3 col-md-offset-3">洗衣途径注册</button>
+					</div>
+					<div class="row">
+						<button type="button" id="updateThing"
+							class="btn btn-info col-md-3 col-md-offset-1">衣 物 设置</button>
+						<button type="button" id="updateWashWay"
+							class="btn btn-info col-md-3 col-md-offset-3">洗衣途径设置</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script
-		src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script type="text/javascript"
-		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="/webjars/jquery/2.1.4/jquery.min.js"></script>
+	<script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="../../js/welcome.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			$("#includedContent").load("/header");
-		});
-	</script>
 </body>
 </html>

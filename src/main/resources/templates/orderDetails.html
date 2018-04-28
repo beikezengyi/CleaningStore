@@ -12,7 +12,7 @@
 </head>
 <body>
 
-	<div id="includedContent"></div>
+	<div th:include="header"></div>
 	<form action="#" th:action="@{/orderDetails}" th:object="${fromBean}"
 		method="post">
 		<ul th:if="${defaultDataFlg} != null">
@@ -22,10 +22,10 @@
 		</ul>
 		<ul th:if="${updateSuccess} != null">
 			<li th:if="${updateSuccess}"
-				style="font-style: italic; background-color: #e5bc16; font-size: large;"
+				style="font-style: italic; color: #e5bc16; font-size: large;"
 				th:text="'数据'+ ${countup}+'件更新，'+${countin}+'件插入成功。'"></li>
 			<li th:unless="${updateSuccess}"
-				style="font-style: italic; background-color: #F2F; font-size: large;"
+				style="font-style: italic; color: #F2F; font-size: large;"
 				th:text="数据更新或者插入失败，请检查并修改后重新提交！" />
 		</ul>
 		<table id="detailstable">
@@ -37,8 +37,9 @@
 								<label th:if="${details.created}"> <a class="titleLink"
 									data-toggle="collapse" data-parent="#accordion"
 									th:href="'#' + ${details.cleanThingDetailsNumber}"
-									th:text="'已　记　载　明　细　' + ${details.cleanThingDetailsNumber}"
-									style="background-color: #EEE"></a> <input type="hidden"
+									th:text="'已　记　载　明　细　' + ${details.cleanThingDetailsNumber} + 
+									(${details.payStatus == '1'} ? '(已支付)' : (${details.deletedFlg == 't'} ? '(已删除)' :''))" ></a> 
+									<input type="hidden"
 									th:field="*{detailsList[__${rowStat.index}__].created}"
 									th:value="${details.created}" />
 								</label> <label th:unless="${details.created}"> <a
@@ -48,7 +49,7 @@
 									th:value="${details.created}"
 									th:href="'#' + ${details.cleanThingDetailsNumber}"
 									th:text="'初　始　化　明　细　' + ${details.cleanThingDetailsNumber}"
-									style="background-color: #E2E"></a> 选中提交数据库<input
+									style="color: #E2E"></a> 选中提交数据库<input
 									type="checkbox" style="width: 45px;"
 									th:field="*{detailsList[__${rowStat.index}__].toinsert}" />
 								</label>
@@ -208,5 +209,6 @@
 	<script type="text/javascript"
 		src="../../js/bootstrap-datetimepicker.zh-CN.js"></script>
 	<script src="../../js/welcome.js"></script>
+	<script src="../../js/datePicker.js"></script>
 </body>
 </html>

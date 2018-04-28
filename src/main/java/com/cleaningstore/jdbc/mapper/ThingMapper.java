@@ -12,6 +12,8 @@ import com.cleaningstore.jdbc.bean.ThingBean;
 @Repository
 public interface ThingMapper {
 
-	@Select(value = " select * from thingtable")
+	@Select(value = " select * from thingtable "//
+			+ " order by sortnumber asc, "//
+			+ "thingnumber asc") //
 	public List<ThingBean> selectThing();
 }
