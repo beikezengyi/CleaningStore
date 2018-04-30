@@ -84,6 +84,7 @@ public class OrderDetailsController {
 
 					PaymentBean py = new PaymentBean();
 					BeanUtils.copyProperties(eachDe, py);
+					py.setOrderNumber(orderNumber);
 					// 扣款记录
 					paymentMapper.insertPatmentWithPay(py);
 				}

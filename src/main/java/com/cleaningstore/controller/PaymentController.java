@@ -1,17 +1,39 @@
 package com.cleaningstore.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import java.util.List;
 
-import com.cleaningstore.jdbc.bean.PaymentBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.cleaningstore.jdbc.mapper.PaymentMapper;
+import com.cleaningstore.web.bean.condition.SelectPaymentCondition;
+import com.cleaningstore.web.bean.result.PaymentResult;
 
 @Controller
 public class PaymentController {
 
-	@RequestMapping(value = "/payment", method = RequestMethod.GET)
-	public String payment(PaymentBean py) {
-		
+	@Autowired
+	PaymentMapper paymentMapper;
+
+	@GetMapping(value = "/payment")
+	public String payment_g(Model model) {
+		model.addAttribute("searchPayment", new SelectPaymentCondition());
+		model.addAttribute("successflg", false);
 		return "payment";
 	}
+	
+	@PostMapping(value = "/payment")
+	public String payment_p(Model model,//
+			@ModelAttribute SelectPaymentCondition searchPayment) {
+		
+		List<PaymentResult> pylist=paymentMapper.selectPayment(searchPayment);
+		model.addAttribute("searchPayment", searchPayment);
+		model.addAttribute("successflg", true);
+		model.addAttribute("pylist", pylist);
+		return "payment";
+	}	
 }

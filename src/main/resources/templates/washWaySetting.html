@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>订单</title>
+<title>洗衣套餐设置</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <link rel="stylesheet" type="text/css"
@@ -15,7 +15,7 @@
 		<form action="#" th:action="@{/washWaySetting}" th:object="${setting}"
 			method="post">
 			<ul>
-				<li th:each="m:${msg}" th:value="${m}"></li>
+				<li th:each="m:${setting.msg}" th:text="${m}"></li>
 			</ul>
 			<table class="table table-bordered table-striped">
 				<thead>

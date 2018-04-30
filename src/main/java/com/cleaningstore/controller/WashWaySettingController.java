@@ -34,8 +34,18 @@ public class WashWaySettingController {
 	public String washWaySetting_p(Model model, //
 			@ModelAttribute WebSettingBean setting) {
 		List<WashWayBean> wylist = setting.getWylist();
-		wylist.stream().filter(s -> s.isChecked()).forEach(s -> washWayMapper.deleteWashWay(s.getWashWayNumber()));
 		wylist.stream().filter(s -> !s.isChecked()).forEach(washWayMapper::updateWashWay);
+
+		List<Integer> deleteList = new ArrayList<>();
+		wylist.stream().filter(s -> s.isChecked()).forEach(s -> deleteList.add(s.getWashWayNumber()));
+		for (Integer num : deleteList) {
+			List<Integer> cande = washWayMapper.canDelete(num);
+			if (cande == null || cande.size() == 0) {
+				washWayMapper.deleteWashWay(num);
+			} else {
+				setting.getMsg().add("番号" + num + "消除失败！下列订单正在使用该衣物。" + cande);
+			}
+		}
 		wylist = washWayMapper.selectWashWay();
 		setting.setWylist(wylist);
 		setting.getMsg().add("更新成功！");

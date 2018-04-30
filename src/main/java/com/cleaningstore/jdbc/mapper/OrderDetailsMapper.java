@@ -38,13 +38,10 @@ public interface OrderDetailsMapper {
 			+ " finishFlg,"//
 			+ " to_char(finishDate,'yyyy-mm-dd hh:mi') as finishDate,"//
 			+ " payStatus," //
-			+ " accountBalance"
-			+ " from orderdetailstable as t1" //
+			+ " accountBalance" + " from orderdetailstable as t1" //
 			+ " left outer join ordertable as t2"//
-			+ " on(t1.cleanThingNumber=t2.cleanThingNumber)"
-			+ " left outer join customertable as t3"//
-			+ " on(t2.customernumber=t3.customernumber)"			
-			+ " where t2.ordernumber = #{ordernumber}"//
+			+ " on(t1.cleanThingNumber=t2.cleanThingNumber)" + " left outer join customertable as t3"//
+			+ " on(t2.customernumber=t3.customernumber)" + " where t2.ordernumber = #{ordernumber}"//
 			+ " order by t1.cleanthingnumber asc,t1.cleanthingdetailsnumber asc;")
 	public List<OrderDetailsResult> selectOrderDetails(@Param(value = "ordernumber") int ordernumber);
 

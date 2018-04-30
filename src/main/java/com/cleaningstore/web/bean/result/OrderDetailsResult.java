@@ -76,6 +76,8 @@ public class OrderDetailsResult {
 	
 	// 退避
 	private String paymentWay;
+	private Integer customerNumber;
 	private Integer accountBalance;
+	
 
 }

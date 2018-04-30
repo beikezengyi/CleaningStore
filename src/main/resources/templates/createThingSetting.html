@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>创建洗衣套餐</title>
+<title>创建衣物</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <link rel="stylesheet" type="text/css"
@@ -12,7 +12,7 @@
 <body>
 	<div th:include="header"></div>
 	<div class="container">
-		<form action="#" th:action="@{/createWashWaySetting}" th:object="${setting}"
+		<form action="#" th:action="@{/createThingSetting}" th:object="${setting}"
 			method="post">
 			<ul>
 				<li th:each="m:${setting.msg}" th:text="${m}"></li>
@@ -23,19 +23,19 @@
 					<tr class="row">
 						<td class="col-md-2">番号</td>
 						<td class="col-md-5">排序号码(降序)</td>
-						<td class="col-md-5">套餐名</td>
+						<td class="col-md-5">衣物名</td>
 					</tr>
 				</thead>
 				<tbody>
-					<tr  class="row" th:each="wy,rowStat : ${setting.wylist}">
+					<tr  class="row" th:each="th,rowStat : ${setting.thlist}">
 						<td><input type="number" readonly="readonly"
-							th:value="${wy.washWayNumber}" style="background-color: #FFD"
-							th:field="*{wylist[__${rowStat.index}__].washWayNumber}" /></td>
-						<td><input type="number" th:value="${wy.sortNumber}"
-							th:field="*{wylist[__${rowStat.index}__].sortNumber}"
+							th:value="${th.thingNumber}" style="background-color: #FFD"
+							th:field="*{thlist[__${rowStat.index}__].thingNumber}" /></td>
+						<td><input type="number" th:value="${th.sortNumber}"
+							th:field="*{thlist[__${rowStat.index}__].sortNumber}"
 							maxlength="" /></td>
-						<td><input type="text" th:value="${wy.washWayName}"
-							th:field="*{wylist[__${rowStat.index}__].washWayName}" /></td>
+						<td><input type="text" th:value="${th.thingName}"
+							th:field="*{thlist[__${rowStat.index}__].thingName}" /></td>
 					</tr>
 				</tbody>
 			</table>

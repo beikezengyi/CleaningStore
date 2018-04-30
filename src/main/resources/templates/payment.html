@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>更改顾客信息及充值</title>
+<title>消费明细</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <link rel="stylesheet" type="text/css"
@@ -11,40 +11,83 @@
 	href="../../css/main.css" />
 </head>
 <body>
-	<div th:include="header"></div>>
+	<div th:include="header"></div>
 	<div class="container">
-		<form action="#" th:action="@{}" method="post">
+		<form action="#" th:action="@{/payment}" method="post" th:object="${searchPayment}">
 			<div class="row">
-				<label class="col-md-1">订单价格</label> <input class="col-md-5"
-					type="number" th:field="" th:value="" /> <label class="col-md-1">订单价格</label>
-				<input class="col-md-5" type="number" th:field="" th:value="" />
-			</div>
-
-			<div class="row">
-				<label class="col-md-1">订单号码</label> <input type="hidden"
-					th:value="${details.cleanThingNumber}"
-					th:field="*{detailsList[__${rowStat.index}__].cleanThingNumber}" />
-				<input class="col-md-5" type="number" readonly="readonly"
-					th:value="${fromBean.orderNumber}" th:field="*{orderNumber}" /> <label
-					class="col-md-1">订单明细番号</label> <input type="number"
-					class="col-md-5" readonly="readonly"
-					th:value="${details.cleanThingDetailsNumber}"
-					th:field="*{detailsList[__${rowStat.index}__].cleanThingDetailsNumber}" />
+				<label class="col-md-2">会员番号</label>
+				<input class="col-md-4" type="number" th:field="*{customerNumber}" th:value="${customerNumber}"/>
+				<label class="col-md-2">会员姓名</label>
+				<input class="col-md-4" type="text" th:field="*{customerName}" th:value="${customerName}"/>
 			</div>
 			<div class="row">
-				<label class="col-md-1">洗衣件数</label> <input class="col-md-5"
-					type="number" th:value="${details.washCount}"
-					th:field="*{detailsList[__${rowStat.index}__].washCount}" /> <label
-					class="col-md-1">洗衣单位</label> <select class="col-md-5"
-					th:field="*{detailsList[__${rowStat.index}__].washUnit}">
-					<option value="件" th:selected="${details.washUnit} == '件'">件</option>
-					<option value="套" th:selected="${details.washUnit} == '套'">套</option>
-					<option value="条" th:selected="${details.washUnit} == '条'">条</option>
-					<option value="床" th:selected="${details.washUnit} == '床'">床</option>
-					<option value="个" th:selected="${details.washUnit} == '个'">个</option>
-					<option value="打" th:selected="${details.washUnit} == '打'">打</option>
+				<label class="col-md-2">消费类型</label>
+				<select class="col-md-4"  th:field="*{consumeType}" >
+					<option value="">全部</option> 
+					<option value="1" th:selected="${consumeType} == '1'">充值</option> 
+					<option value="2" th:selected="${consumeType} == '2'">消费</option>
+				</select>
+				<label class="col-md-2">支付方式</label>
+				<select class="col-md-4" th:field="*{paymentWay}" >
+					<option value="">所有</option>
+					<option value="现金支付" th:select="${paymentWay} == '现金支付'">现金支付</option>
+					<option value="微信支付" th:select="${paymentWay} == '微信支付'">微信支付</option>
+					<option value="支付宝支付" th:select="${paymentWay} == '支付宝支付'">支付宝支付</option>
+					<option value="银行卡转账" th:select="${paymentWay} == '银行卡转账'">银行卡转账</option>
+					<option value="其他支付途径" th:select="${paymentWay} == '其他支付途径'">其他支付途径</option>
 				</select>
 			</div>
+			<div class="row">
+				<label class="col-md-2">消费检索开始日</label>
+				<input class="col-md-4" type="date" th:field="*{paymentDateStart}" th:value="${paymentDateStart}"/>
+				<label class="col-md-2">订单番号</label>
+				<input class="col-md-4" type="number" th:field="*{orderNumber}" th:value="${orderNumber}"/>
+			</div>
+			<div class="row">
+				<label class="col-md-2">消费检索终了日</label>
+				<input class="col-md-4" type="date" th:field="*{paymentDateEnd}" th:value="${paymentDateEnd}"/>
+			</div>
+			<div class="row">
+				<input class="col-md-4 col-md-offset-3" type="submit" value="检索" />
+			</div>			
+		</form>
+		<form action="#" th:if="${successflg}" th:object="${pylist}">
+			<table id="result" class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<td>消费番号</td>
+						<td>顾客番号</td>
+						<td>顾客姓名</td>
+						<td>消费类型</td>
+						<td>支付方式</td>
+						<td>订单号</td>
+						<td>订单内含明细番号</td>
+						<td>充值额</td>
+						<td>消费额</td>
+						<td>消费/充值前余额</td>
+						<td>消费/充值后余额</td>
+						<td>消费备注</td>
+						<td>消费日期</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="p:${pylist}">
+						<td th:text="${p.paymentNumber}">消费番号</td>
+						<td th:text="${p.customerNumber}">顾客番号</td>
+						<td th:text="${p.customerName}">顾客姓名</td>
+						<td th:text="${p.consumeType} =='1'?'充值':'付费'">消费类型</td>
+						<td th:text="${p.paymentWay}">支付方式</td>
+						<td th:text="${p.orderNumber}">订单号</td>
+						<td th:text="${p.cleanThingDetailsNumber}">订单内含明细番号</td>
+						<td th:text="${p.chargePayment}">充值额</td>
+						<td th:text="${p.thingPrice}">消费额</td>
+						<td th:text="${p.accountBalanceBefore}">消费/充值前余额</td>
+						<td th:text="${p.accountBalanceAtfer}">消费/充值后余额</td>
+						<td th:text="${p.paymengtMemo}">消费备注</td>
+						<td th:text="${p.paymentdate}">消费日期</td>
+					</tr>
+				</tbody>
+			</table>		
 		</form>
 	</div>
 

@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class ThingBean {
 	
-	private Boolean checked;
+	private boolean checked;
 	private Integer thingNumber;
 	private String thingName;
 	private Integer sortNumber;

@@ -31,6 +31,14 @@ $('#updateThing').click(function(){
 $('#createThing').click(function(){
 	window.location.href='/createThingSetting';
 });
+$('#analysisOrder').click(function(){
+	window.location.href='/analysisOrder';
+});
+$('#analysisMoney').click(function(){
+	window.location.href='/payment';
+});
+
+
 
 function changeColor(id, selectValue) {
 	var index = id.substring(11, 12);

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>创建洗衣套餐</title>
+<title>衣物设置</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <link rel="stylesheet" type="text/css"
@@ -12,35 +12,37 @@
 <body>
 	<div th:include="header"></div>
 	<div class="container">
-		<form action="#" th:action="@{/createWashWaySetting}" th:object="${setting}"
+		<form action="#" th:action="@{/thingSetting}" th:object="${setting}"
 			method="post">
 			<ul>
 				<li th:each="m:${setting.msg}" th:text="${m}"></li>
 			</ul>
-			<span>排序番号越大，出现在下拉菜单的位置越靠前。</span>
 			<table class="table table-bordered table-striped">
 				<thead>
 					<tr class="row">
+						<td class="col-md-2">选中删除</td>
 						<td class="col-md-2">番号</td>
-						<td class="col-md-5">排序号码(降序)</td>
-						<td class="col-md-5">套餐名</td>
+						<td class="col-md-4">排序号码(降序)</td>
+						<td class="col-md-4">套餐名</td>
 					</tr>
 				</thead>
 				<tbody>
-					<tr  class="row" th:each="wy,rowStat : ${setting.wylist}">
+					<tr class="row" th:each="wy,rowStat : ${setting.thlist}">
+						<td><input type="checkbox" value="true"
+							th:field="*{thlist[__${rowStat.index}__].checked}" /></td>
 						<td><input type="number" readonly="readonly"
-							th:value="${wy.washWayNumber}" style="background-color: #FFD"
-							th:field="*{wylist[__${rowStat.index}__].washWayNumber}" /></td>
+							th:value="${wy.thingNumber}"
+							th:field="*{thlist[__${rowStat.index}__].thingNumber}" /></td>
 						<td><input type="number" th:value="${wy.sortNumber}"
-							th:field="*{wylist[__${rowStat.index}__].sortNumber}"
+							th:field="*{thlist[__${rowStat.index}__].sortNumber}"
 							maxlength="" /></td>
-						<td><input type="text" th:value="${wy.washWayName}"
-							th:field="*{wylist[__${rowStat.index}__].washWayName}" /></td>
+						<td><input type="text" th:value="${wy.thingName}"
+							th:field="*{thlist[__${rowStat.index}__].thingName}" /></td>
 					</tr>
 				</tbody>
 			</table>
 			<div class="row">
-				<input class="col-md-4 col-md-offset-2" type="submit" value="新增设置" />
+				<input type="submit" value="提交更改" />
 			</div>
 		</form>
 	</div>
