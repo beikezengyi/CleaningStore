@@ -15,6 +15,9 @@ public class OrderDetailsSqlProvider {
 				if (isNotEmpty(re.getOtherName())) {
 					SET("otherName = #{otherName}");
 				}
+				if (isNotEmpty(re.getThingColor())) {
+					SET("thingColor = #{thingColor}");
+				}
 				if (isNotEmpty(re.getWashCount())) {
 					SET("washCount = #{washCount}");
 				}
@@ -40,6 +43,9 @@ public class OrderDetailsSqlProvider {
 				SET("deletedFlg = #{deletedFlg}::boolean");
 				if (isNotEmpty(re.getDeletedDate())) {
 					SET("deletedDate = to_timestamp(#{deletedDate},'yyyy-mm-dd hh24:mi')");
+				}
+				if (isNotEmpty(re.getDeletedMemo())) {
+					SET("deletedMemo = #{deletedMemo}");
 				}
 				SET("finishflg = #{finishflg}::boolean");
 				if (isNotEmpty(re.getFinishDate())) {
@@ -72,6 +78,9 @@ public class OrderDetailsSqlProvider {
 				}
 				VALUES("thingNumber", "#{thingNumber}");
 				VALUES("washWayNumber", "#{washWayNumber}");
+				if (isNotEmpty(re.getThingColor())) {
+					VALUES("thingColor", "#{thingColor}");
+				}
 				if (isNotEmpty(re.getExpectedDate())) {
 					VALUES("expectedDate", "to_timestamp(#{expectedDate},'yyyy-mm-dd hh24:mi')");
 				}
@@ -89,6 +98,9 @@ public class OrderDetailsSqlProvider {
 				VALUES("deletedFlg", "#{deletedFlg}::boolean");
 				if (isNotEmpty(re.getDeletedDate())) {
 					VALUES("deletedDate", "to_timestamp(#{deletedDate},'yyyy-mm-dd hh24:mi')");
+				}
+				if (isNotEmpty(re.getDeletedMemo())) {
+					VALUES("deletedMemo", "#{deletedMemo}");
 				}
 				VALUES("finishflg", "#{finishflg}::boolean");
 				if (isNotEmpty(re.getFinishDate())) {

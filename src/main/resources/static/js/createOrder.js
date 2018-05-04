@@ -58,3 +58,14 @@ function seterror(name) {
 	$('#customerNumber').val('');
 	$('#customerName').focus();
 }
+
+$('#createordercommit').click(function(){
+	var cuNumber=$('#customerNumber').val();
+	if(cuNumber==null || cuNumber == '' || cuNumber==0){
+		alert('请点击放大镜查询会员名或输入会员名。');
+		$('#customerName').focus();
+		return false;
+	}else{
+		return true;
+	}
+});

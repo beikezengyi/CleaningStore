@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>订单</title>
+<title>创建订单</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <link rel="stylesheet" type="text/css"
@@ -9,9 +9,6 @@
 <link rel="stylesheet" th:href="@{/css/main.css}"
 	href="../../css/main.css" />
 <style type="text/css">
-table tr th {
-	width: 25%;
-}
 </style>
 </head>
 <body>
@@ -49,7 +46,8 @@ table tr th {
 	</form>
 	<p></p>
 	<form action="#" th:if="${inertedBean} != null">
-		<p style="color: red">订单创建成功</p>
+		<h1 style="color: red">订单创建成功</h1>
+		<h2>点击订单号码添加详情。</h2>
 		<table border="1" class="table">
 			<thead>
 				<tr>
@@ -63,12 +61,9 @@ table tr th {
 				<tr>
 					<td><a href="#" th:text="${inertedBean.orderNumber}"
 						onclick="goOrderDetails(this.innerText)"></a></td>
-					<td><input type="text" readonly="readonly"
-						th:value="${inertedBean.customerName}" /></td>
-					<td><input type="text" readonly="readonly"
-						th:value="${inertedBean.storeName}" /></td>
-					<td><input type="text" readonly="readonly"
-						th:value="${inertedBean.orderCreateDateStr}" /></td>
+					<td><span th:text="${inertedBean.customerName}"></span></td>
+					<td><span th:text="${inertedBean.storeName}"></span></td>
+					<td><span th:text="${inertedBean.orderCreateDateStr}"></span></td>
 				</tr>
 			</tbody>
 		</table>

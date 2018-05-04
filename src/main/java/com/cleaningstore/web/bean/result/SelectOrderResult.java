@@ -57,4 +57,6 @@ public class SelectOrderResult {
 
 	/** 完成日期 */
 	private String finishDate;
+	
+	private String payStatus;
 }

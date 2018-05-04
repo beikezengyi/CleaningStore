@@ -30,6 +30,8 @@ public class OrderDetailsResult {
 
 	/** 物品别名 */
 	private String otherName;
+	
+	private String thingColor;
 
 	private String createDate;
 	private Integer washCount;
@@ -65,6 +67,8 @@ public class OrderDetailsResult {
 
 	/** 消除日期 */
 	private String deletedDate;
+	
+	private String deletedMemo;
 
 	private String finishflg;
 
@@ -76,8 +80,6 @@ public class OrderDetailsResult {
 	
 	// 退避
 	private String paymentWay;
-	private Integer customerNumber;
-	private Integer accountBalance;
 	
 
 }

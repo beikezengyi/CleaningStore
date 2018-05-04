@@ -28,6 +28,29 @@
 				style="font-style: italic; color: #F2F; font-size: large;"
 				th:text="数据更新或者插入失败，请检查并修改后重新提交！" />
 		</ul>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<td>订单号码</td>
+					<td>会员号码</td>
+					<td>顾客姓名</td>
+					<td>账户余额</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type="number" readonly="readonly"
+						th:value="${orderNumber}" th:field="*{orderNumber}" /></td>
+					<td><input type="number" readonly="readonly"
+						th:value="${customerNumber}" th:field="*{customerNumber}" /></td>
+					<td><input type="text" readonly="readonly"
+						th:value="${customerName}" th:field="*{customerName}" /></td>
+					<td><input type="number" th:field="*{accountBalance}"
+						th:value="${accountBalance} == null ? '0' :${accountBalance}"
+						readonly="readonly" /></td>
+				</tr>
+			</tbody>
+		</table>
 		<table id="detailstable">
 			<tr th:each="details,rowStat : ${fromBean.detailsList}">
 				<td>
@@ -38,7 +61,7 @@
 									data-toggle="collapse" data-parent="#accordion"
 									th:href="'#' + ${details.cleanThingDetailsNumber}"
 									th:text="'已　记　载　明　细　' + ${details.cleanThingDetailsNumber} + 
-									(${details.payStatus == '1'} ? '(已支付)' : (${details.deletedFlg == 't'} ? '(已删除)' :''))" ></a> 
+									(${details.payStatus == '1'} ? '(已支付)' : (${details.deletedFlg == 't'} ? '(已删除)' :''))"></a>
 									<input type="hidden"
 									th:field="*{detailsList[__${rowStat.index}__].created}"
 									th:value="${details.created}" />
@@ -49,47 +72,38 @@
 									th:value="${details.created}"
 									th:href="'#' + ${details.cleanThingDetailsNumber}"
 									th:text="'初　始　化　明　细　' + ${details.cleanThingDetailsNumber}"
-									style="color: #E2E"></a> 选中提交数据库<input
-									type="checkbox" style="width: 45px;"
+									style="color: #E2E"></a> 选中提交数据库<input type="checkbox"
+									style="width: 45px;"
 									th:field="*{detailsList[__${rowStat.index}__].toinsert}" />
 								</label>
 							</h4>
 						</div>
 						<ul>
 							<li th:each="err : ${details.errormsg}"
-								style="font-style: oblique; background-color: #db5727; font-size: 20px;"
-								th:text="${err}"></li>
+								style="color: #db5727; font-size: 20px;" th:text="${err}"></li>
 						</ul>
 						<div th:id="${details.cleanThingDetailsNumber}"
 							class="panel-collapse collapse">
-							<div class="panel-body" 
-							th:classappend="${details.payStatus == '1'} ? readonlyDivSuccess : (${details.deletedFlg == 't'} ? readonlyDivDelete)">
+							<div class="panel-body"
+								th:classappend="${details.payStatus == '1'} ? readonlyDivSuccess : (${details.deletedFlg == 't'} ? readonlyDivDelete)">
 								<div class="row">
-									<label class="col-md-1">订单号码</label> <input type="hidden"
-										th:value="${details.cleanThingNumber}"
+									<input type="hidden" th:value="${details.cleanThingNumber}"
 										th:field="*{detailsList[__${rowStat.index}__].cleanThingNumber}" />
-									<input class="col-md-5" type="number" readonly="readonly"
-										th:value="${fromBean.orderNumber}" th:field="*{orderNumber}" />
 									<label class="col-md-1">订单明细番号</label> <input type="number"
 										class="col-md-5" readonly="readonly"
 										th:value="${details.cleanThingDetailsNumber}"
 										th:field="*{detailsList[__${rowStat.index}__].cleanThingDetailsNumber}" />
-								</div>
-
-								<div class="row">
 									<label class="col-md-1">下单日期</label> <input class="col-md-5"
 										type="datetime" readonly="readonly"
 										th:value="${details.createDate}"
 										th:field="*{detailsList[__${rowStat.index}__].createDate}" />
-									<label class="col-md-1">别名/残损污备注</label> <input
-										class="col-md-5" type="text" th:value="${details.otherName}"
-										th:field="*{detailsList[__${rowStat.index}__].otherName}" />
 								</div>
+
 								<div class="row">
-									<label class="col-md-1">洗衣件数</label> <input class="col-md-5"
+									<label class="col-md-1">洗衣件数</label> <input class="col-md-2"
 										type="number" th:value="${details.washCount}"
 										th:field="*{detailsList[__${rowStat.index}__].washCount}" />
-									<label class="col-md-1">洗衣单位</label> <select class="col-md-5"
+									<label class="col-md-1">洗衣单位</label> <select class="col-md-2"
 										th:field="*{detailsList[__${rowStat.index}__].washUnit}">
 										<option value="件" th:selected="${details.washUnit} == '件'">件</option>
 										<option value="套" th:selected="${details.washUnit} == '套'">套</option>
@@ -97,7 +111,9 @@
 										<option value="床" th:selected="${details.washUnit} == '床'">床</option>
 										<option value="个" th:selected="${details.washUnit} == '个'">个</option>
 										<option value="打" th:selected="${details.washUnit} == '打'">打</option>
-									</select>
+									</select> <label class="col-md-1">别名/残损污备注</label> <input
+										class="col-md-5" type="text" th:value="${details.otherName}"
+										th:field="*{detailsList[__${rowStat.index}__].otherName}" />
 								</div>
 								<div class="row">
 									<label class="col-md-1">物品类型</label> <select class="col-md-5"
@@ -115,15 +131,11 @@
 									</select>
 								</div>
 								<div class="row">
-									<label class="col-md-1">期望交付日期</label> <input
-										class="col-md-5 datetimepicker" type="datetime"
-										th:value="${details.expectedDate}"
-										th:field="*{detailsList[__${rowStat.index}__].expectedDate}" />
-									<label class="col-md-1">实际交付日期</label> <input
-										class="col-md-5 datetimepicker" type="datetime"
-										th:value="${details.realDate}"
-										th:field="*{detailsList[__${rowStat.index}__].realDate}" />
-								</div>
+									<label class="col-md-1">衣物颜色</label> <input class="col-md-2"
+										type="color"
+										th:field="*{detailsList[__${rowStat.index}__].thingColor}"
+										th:value="${thingColor}" />
+								</div>								
 								<div class="row">
 									<label class="col-md-1">物品价格</label> <input class="col-md-5"
 										type="number" th:value="${details.thingPrice}"
@@ -134,61 +146,74 @@
 										th:field="*{detailsList[__${rowStat.index}__].managementNumber}" />
 								</div>
 								<div class="row">
-									<label class="col-md-1">是否上门取件</label> <select class="col-md-5"
+									<label class="col-md-1">是否上门取件</label> <select class="col-md-2"
 										th:field="*{detailsList[__${rowStat.index}__].visitToGetOrder}">
 										<option th:each="yn : ${yesno}" th:value="${yn.flg}"
 											th:text="${yn.des}"
 											th:selected="${details.visitToGetOrder} == ${yn.flg} ? true : false"></option>
 									</select> <label class="col-md-1">是否送件上门</label> <select
-										class="col-md-5"
+										class="col-md-2"
 										th:field="*{detailsList[__${rowStat.index}__].visitToPutOrder}">
 										<option th:each="yn : ${yesno}" th:value="${yn.flg}"
 											th:text="${yn.des}"
 											th:selected="${details.visitToPutOrder} == ${yn.flg} ? true : false"></option>
-									</select>
+									</select> <label class="col-md-1">期望交付日期</label> <input
+										class="col-md-5 datetimepicker" type="datetime"
+										th:value="${details.expectedDate}"
+										th:field="*{detailsList[__${rowStat.index}__].expectedDate}" />
+
 								</div>
 								<div class="row">
-									<label class="col-md-1">消除旗帜</label> <select class="col-md-5"
+									<label class="col-md-1">取消旗帜</label> <select class="col-md-2"
 										onchange="changeColor(this.id,this.value)"
 										th:field="*{detailsList[__${rowStat.index}__].deletedFlg}">
 										<option th:each="yn : ${yesno}" th:value="${yn.flg}"
 											th:text="${yn.des}"
 											th:selected="${details.deletedFlg} == ${yn.flg} ? true : false"></option>
-									</select> <label class="col-md-1">消除日期</label> <input
-										class="col-md-5 datetimepicker" type="datetime"
+									</select> <label class="col-md-1">取消日期</label> <input
+										class="col-md-2 datetimepicker" type="datetime"
 										th:value="${details.deletedDate}"
 										th:field="*{detailsList[__${rowStat.index}__].deletedDate}" />
+									<label class="col-md-1">取消备注</label> <input class="col-md-5"
+										type="text"
+										th:field="*{detailsList[__${rowStat.index}__].deletedMemo}"
+										th:value="${deletedMemo}" />
 								</div>
 								<div class="row">
-									<label class="col-md-1">完成旗帜</label> <select class="col-md-5"
+									<label class="col-md-1">完成旗帜</label> <select class="col-md-2"
 										onchange="changeColor(this.id,this.value)"
 										th:field="*{detailsList[__${rowStat.index}__].finishflg}">
 										<option th:each="yn : ${yesno}" th:value="${yn.flg}"
 											th:text="${yn.des}"
 											th:selected="${details.finishflg} == ${yn.flg} ? true : false"></option>
 									</select> <label class="col-md-1">完成日期</label> <input
-										class="col-md-5 datetimepicker" type="datetime"
+										class="col-md-2 datetimepicker" type="datetime"
 										th:value="${details.finishDate}"
 										th:field="*{detailsList[__${rowStat.index}__].finishDate}" />
+									<label class="col-md-1">实际交付日期</label> <input
+										class="col-md-5 datetimepicker" type="datetime"
+										th:value="${details.realDate}"
+										th:field="*{detailsList[__${rowStat.index}__].realDate}" />
 								</div>
-								<p></p>
 								<div class="row">
-									<label class="col-md-1">支付该订单/订单已完成:</label> 
-									<input class="col-md-2" type="checkbox"  th:field="*{detailsList[__${rowStat.index}__].payStatus}" value="1"/> 
-									<label class="col-md-1">账户余额:</label> 
-									<input class="col-md-2" type="number"
-									 th:field="*{detailsList[__${rowStat.index}__].accountBalance}"
-									 th:value="${details.accountBalance} == null ? '0' :${details.accountBalance}" 
-									readonly="readonly" ></input> 
-									<label class="col-md-1">支付方式:</label> 
-									<select class="col-md-5"
+									<label class="col-md-2">支付该订单/订单已完成:</label> <input
+										class="col-md-1" type="checkbox"
+										th:field="*{detailsList[__${rowStat.index}__].payStatus}"
+										value="1" /> <label class="col-md-1">支付方式:</label> <select
+										class="col-md-2"
 										th:field="*{detailsList[__${rowStat.index}__].paymentWay}">
-										<option value="现金支付" th:select="${details.paymentWay} == '现金支付'">现金支付</option>
-										<option value="账户余额支付" th:select="${details.paymentWay} == '账户余额支付'">账户余额支付</option>
-										<option value="微信支付" th:select="${details.paymentWay} == '微信支付'">微信支付</option>
-										<option value="支付宝支付" th:select="${details.paymentWay} == '支付宝支付'">支付宝支付</option>
-										<option value="银行卡转账" th:select="${details.paymentWay} == '银行卡转账'">银行卡转账</option>
-										<option value="其他支付途径" th:select="${details.paymentWay} == '其他支付途径'">其他支付途径</option>
+										<option value="现金支付"
+											th:select="${details.paymentWay} == '现金支付'">现金支付</option>
+										<option value="账户余额支付"
+											th:select="${details.paymentWay} == '账户余额支付'">账户余额支付</option>
+										<option value="微信支付"
+											th:select="${details.paymentWay} == '微信支付'">微信支付</option>
+										<option value="支付宝支付"
+											th:select="${details.paymentWay} == '支付宝支付'">支付宝支付</option>
+										<option value="银行卡转账"
+											th:select="${details.paymentWay} == '银行卡转账'">银行卡转账</option>
+										<option value="其他支付途径"
+											th:select="${details.paymentWay} == '其他支付途径'">其他支付途径</option>
 									</select>
 								</div>
 							</div>

@@ -59,12 +59,12 @@
 				</select>
 			</div>
 			<div class="row">
-				<label class="col-md-1">赠送金额:</label> <label class="col-md-1">选择</label>
+				<label class="col-md-1">赠送金额:</label> 
+				<label class="col-md-1">选择</label>
 				<input class="col-md-1" type="radio" th:field="*{freetype}"
-					th:checked="${freetype}" style="width: 30px" value="true"
-					onclick="changeFreeType(this.id,false)" /> <select
-					class="col-md-4" id="freeBalanceSe" style="width: 390px"
-					onchange="changeFreeValue(this.id,false)"
+					th:checked="${freetype}" value="true"
+					onclick="changeFreeType(this.id,false)" /> 
+				<select class="col-md-3" id="freeBalanceSe" onchange="changeFreeValue(this.id,false)"
 					th:field="*{freeBalanceSe}">
 					<option value="0" th:select="${freeBalanceSe} == '0'">0</option>
 					<option value="10" th:select="${freeBalanceSe} == '10'">10</option>
@@ -77,11 +77,14 @@
 					<option value="80" th:select="${freeBalanceSe} == '80'">80</option>
 					<option value="90" th:select="${freeBalanceSe} == '90'">90</option>
 					<option value="100" th:select="${freeBalanceSe} == '100'">100</option>
-				</select> <label class="col-md-1">自定义</label> <input class="col-md-1"
-					type="radio" style="width: 30px" th:field="*{freetype}"
+				</select> 
+				
+				<label class="col-md-1">自定义</label> 
+				<input class="col-md-1" type="radio" th:field="*{freetype}"
 					th:checked="${freetype}=='false'" value="false"
-					onclick="changeFreeType(this.id,false)" /> <input class="col-md-3"
-					style="width: 495px" type="number" th:value="${freeBalanceIn}"
+					onclick="changeFreeType(this.id,false)" /> 
+				<input class="col-md-4"
+					type="number" th:value="${freeBalanceIn}"
 					th:field="*{freeBalanceIn}"
 					onchange="changeFreeValue(this.id,false)" id="freeBalanceIn" />
 			</div>

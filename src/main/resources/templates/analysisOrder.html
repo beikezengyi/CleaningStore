@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>订单统计</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<link rel="stylesheet" th:href="@{/css/main.css}"
+	href="../../css/main.css" />
+<link rel="stylesheet" th:href="@{/css/MonthPicker.css}"
+	href="../../css/MonthPicker.css" />	
+</head>
+<body>
+	<div th:include="header"></div>
+	<div class="container">
+		<h1>订单分析</h1>
+		<form action="#" th:action="@{/analysisOrder}" method="post"
+			th:object="${cond}">
+			<div class="row">
+				<label class="col-md-2">分析开始月</label> <input class="col-md-4"
+					type="text" th:field="*{startMonth}"
+					th:value="${startMonth}" /> 
+			</div>
+			<div class="row">
+				<label class="col-md-2">分析终止月</label> <input class="col-md-4"
+					type="text" th:field="*{endMonth}"
+					th:value="${endMonth}" /> 
+			</div>
+			<div class="row">
+				<input class="col-md-4 col-md-offset-3" type="submit" value="分析开始" />
+			</div>
+		</form>
+		<form action="#" th:if="${successflg}" th:object="${aoList}">
+			<table id="datatable" class="table table-bordered table-striped">
+				<thead>
+					<tr class="row">
+						<td class="col-md-2">自然月</td>
+						<td class="col-md-2">订单数</td>
+						<td class="col-md-2">衣物数</td>
+						<td class="col-md-2">总价格</td>
+						<td class="col-md-2">已付总价(账户余额支付除外)</td>
+						<td class="col-md-2">总充值</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="p:${pylist}">
+						<td th:text="${p.month}"></td>
+						<td th:text="${p.orderCount}"></td>
+						<td th:text="${p.thingCount}"></td>
+						<td th:text="${p.priceCount}"></td>
+						<td th:text="${p.totalPayment}"></td>
+						<td th:text="${p.totalCharge}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	<script type="text/javascript"
+		src="/webjars/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="/webjars/datatables/1.10.9/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript"
+		src="/webjars/jquery-ui/1.11.4/jquery-ui.min.js"></script>
+	<script src="../../js/datatable.js"></script>
+	<script src="../../js/MonthPicker.js"></script>
+	<script type="text/javascript">
+	$('*[id*=Month]').each(function() {
+	    $(this).MonthPicker({ Button: false });
+	});	
+	</script>
+</body>
+</html>

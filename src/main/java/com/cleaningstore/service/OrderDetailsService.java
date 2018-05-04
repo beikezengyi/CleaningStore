@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.cleaningstore.jdbc.bean.CustomerBean;
 import com.cleaningstore.jdbc.mapper.CustomerMapper;
-import com.cleaningstore.jdbc.mapper.OrderDetailsMapper;
 import com.cleaningstore.web.bean.result.OrderDetailsResult;
 import com.cleaningstore.web.bean.result.YesNoBean;
 
@@ -21,9 +20,6 @@ public class OrderDetailsService {
 
 	@Autowired
 	CustomerMapper customerMapper;
-
-	@Autowired
-	OrderDetailsMapper orderDetailsMapper;
 
 	public List<YesNoBean> createYesNo() {
 		YesNoBean bean1 = new YesNoBean();
@@ -40,13 +36,10 @@ public class OrderDetailsService {
 
 	public void createNewData(int orderNumber, List<OrderDetailsResult> detailsList) {
 		int detailNumber;
-		Integer accountBal = null;
 		if (detailsList.isEmpty()) {
 			detailNumber = 1;
-			accountBal = customerMapper.selectOneWithOrderNumber(orderNumber).getAccountBalance();
 		} else {
 			detailNumber = detailsList.get(detailsList.size() - 1).getCleanThingDetailsNumber() + 1;
-			accountBal = detailsList.get(0).getAccountBalance();
 		}
 		OrderDetailsResult defaultData1 = new OrderDetailsResult();
 		defaultData1.setCleanThingNumber(orderNumber);
@@ -54,9 +47,6 @@ public class OrderDetailsService {
 		defaultData1.setCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 		defaultData1.setCreated(false);
 		defaultData1.setToinsert(false);
-		if (accountBal != null) {
-			defaultData1.setAccountBalance(accountBal);
-		}
 		OrderDetailsResult defaultData2 = new OrderDetailsResult();
 		BeanUtils.copyProperties(defaultData1, defaultData2);
 		defaultData2.setCleanThingDetailsNumber(detailNumber + 1);
@@ -119,7 +109,6 @@ public class OrderDetailsService {
 						int accountbal = cus.getAccountBalance() == null ? 0 : cus.getAccountBalance();
 						if ((accountbal - eachDe.getThingPrice()) < 0) {
 							eachDe.getErrormsg().add("顾客 " + cus.getCustomerName() + " 当前账户余额不足以支付本次订单，请充值或选择其他支付方式！");
-							eachDe.setAccountBalance(cus.getAccountBalance());
 						}
 					}
 				} else if (isNotEmpty(eachDe.getPayStatus())) {

@@ -75,7 +75,8 @@ public class OrderDetailsController {
 				if ((eachDe.isCreated() || eachDe.isToinsert()) //
 						&& eachDe.getPayStatus() != null //
 						&& eachDe.getPayStatus().equals("1")//
-						&& dbStatus != 3) {
+						&& dbStatus != 3//
+						&& dbStatus != 2) {
 
 					if (eachDe.getPaymentWay().equals("账户余额支付")) {
 						// 账户扣款
@@ -110,7 +111,7 @@ public class OrderDetailsController {
 			model.put("defaultDataFlg", true);
 		}
 		service.createNewData(orderNumber, detailsList);
-		FromBean fromBean = new FromBean();
+		FromBean fromBean = orderDetailsMapper.selectOrderInfo(orderNumber);
 		fromBean.setOrderNumber(orderNumber);
 		fromBean.setDetailsList(detailsList);
 		createList(model, fromBean);

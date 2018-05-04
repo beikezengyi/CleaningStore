@@ -62,6 +62,13 @@ center {
 	pointer-events: none;
 }
 
+input:read-only { 
+    color: #8c8c8c;
+}
+select:disabled {
+    color: #8c8c8c;
+}
+
 .titleLink {
 	display: block;
 	width: 1300px;

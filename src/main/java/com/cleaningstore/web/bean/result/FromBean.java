@@ -9,6 +9,12 @@ import lombok.Data;
 public class FromBean {
 
 	private Integer orderNumber;
+	
+	private Integer customerNumber;
+	
+	private String customerName;
+	
+	private Integer accountBalance;	
 
 	private List<OrderDetailsResult> detailsList = new ArrayList<>();
 }

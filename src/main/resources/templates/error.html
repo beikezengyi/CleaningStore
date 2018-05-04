@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>出错了</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="stylesheet" type="text/css"
+	href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet" th:href="@{/css/main.css}"
+	href="../../css/main.css" />
+</head>
+<body>
+	<div th:include="header"></div>
+	<div class="container">
+		<h1>页面加载失败。</h1>
+		<span th:if="${errorcode}=='404'">指定路径的页面不存在！</span>
+		<span th:if="${errorcode}=='500'">发生内部错误，请联系系统管理员！</span>
+		<span>点击返回<a href="/">首页</a></span>
+	</div>
+	<script type="text/javascript" src="/webjars/jquery/2.1.4/jquery.js"></script>
+	<script type="text/javascript"
+		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>	
+</body>
+</html>

@@ -25,15 +25,15 @@ public class PaymentController {
 		model.addAttribute("successflg", false);
 		return "payment";
 	}
-	
+
 	@PostMapping(value = "/payment")
-	public String payment_p(Model model,//
+	public String payment_p(Model model, //
 			@ModelAttribute SelectPaymentCondition searchPayment) {
-		
-		List<PaymentResult> pylist=paymentMapper.selectPayment(searchPayment);
+
+		List<PaymentResult> pylist = paymentMapper.selectPayment(searchPayment);
 		model.addAttribute("searchPayment", searchPayment);
 		model.addAttribute("successflg", true);
 		model.addAttribute("pylist", pylist);
 		return "payment";
-	}	
+	}
 }

@@ -33,16 +33,16 @@
 		<div class="row">
 			<label class="col-md-1"> 订单创建检索开始日:</label> <input class="col-md-5"
 				type="date" th:field="*{createOrderDateStart}"
-				name="createOrderDateStart" /> <label class="col-md-1">物件送店检索终了日:</label>
-			<input class="col-md-5" type="date" th:field="*{createDateEnd}"
-				name="createDateEnd" />
+				name="createOrderDateStart" />  <label class="col-md-1">物件送店检索开始日:</label>
+			<input class="col-md-5" type="date" th:field="*{createDateStart}"
+				name="createDateStart" />
 		</div>
 		<div class="row">
 			<label class="col-md-1">订单创建检索终了日:</label> <input class="col-md-5"
 				type="date" th:field="*{createOrderDateEnd}"
-				name="createOrderDateEnd" /> <label class="col-md-1">物件送店检索开始日:</label>
-			<input class="col-md-5" type="date" th:field="*{createDateStart}"
-				name="createDateStart" />
+				name="createOrderDateEnd" /><label class="col-md-1">物件送店检索终了日:</label>
+			<input class="col-md-5" type="date" th:field="*{createDateEnd}"
+				name="createDateEnd" />
 		</div>
 		<div class="row">
 			<label></label> <input class="col-md-6 col-md-offset-2"
@@ -52,68 +52,56 @@
 
 	<div class="container">
 
-		<div class="table-responsive">
-			<h1>订单一览</h1>
-			<h4 th:text="'检索结果共 ' + ${orderResultCount} + 件"></h4>
-			<table id="ordertable" class="table table-bordered table-striped">
-				<thead>
-					<tr>
-						<td>选择</td>
-						<td>订单号码</td>
-						<td>物品件数</td>
-						<td>创建订单日期</td>
-						<td>物品送店日期</td>
-						<td>顾客姓名</td>
-						<td>电话号码</td>
-						<td>接单店铺</td>
-						<td>別名</td>
-						<td>明细</td>
-						<td>洗衣途径</td>
-						<td>期望日</td>
-						<td>取件日</td>
-						<td>价格</td>
-						<td>管理号码</td>
-						<td>上门服务</td>
-						<td>已删除</td>
-						<td>删除日期</td>
-						<td>已完成</td>
-						<td>完成日期</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="order : ${orderResultList}">
-						<td><input style="width: 20px;" id="selectorder"
-							name="selectorder" type="checkbox" /></td>
-						<td><a href="#" th:text="${order.orderNumber}"
-							onclick="goOrderDetails(this.innerText)"></a></td>
-						<td th:text="${order.cleanThingDetailsNumber}" />
-						<td th:text="${order.orderCreateDate}" />
-						<td th:text="${order.createDate}" />
-						<td th:text="${order.customerName}" />
-						<td th:text="${order.customerPhoneNumber}" />
-						<td th:text="${order.storeName}" />
-						<td th:text="${order.otherName}" />
-						<td th:text="${order.washCountWashUnitThingNumber}" />
-						<td th:text="${order.washWayName}" />
-						<td th:text="${order.expectedDate}" />
-						<td th:text="${order.realDate}" />
-						<td th:text="${order.thingPrice}" />
-						<td th:text="${order.managementNumber}" />
-						<td th:text="${order.visitOrder}" />
-						<td th:text="${order.deletedFlg}" />
-						<td th:text="${order.deletedDate}" />
-						<td th:text="${order.finishFlg}" />
-						<td th:text="${order.finishDate}" />
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
+		<h1>订单一览</h1>
+		<table id="datatable" class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<td>订单号码</td>
+					<td>物品件数</td>
+					<td>顾客姓名</td>
+					<td>电话号码</td>
+					<td>別名</td>
+					<td>内容</td>
+					<td>洗衣途径</td>
+					<td>已完成</td>
+					<td>取件日</td>
+					<td>价格</td>
+					<td>已支付</td>
+					<td>管理号码</td>
+					<td>已删除</td>
+					<td>创建订单日期</td>
+					<td>物品送店日期</td>					
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="order : ${orderResultList}">
+					<td><a href="#" th:text="${order.orderNumber}"
+						onclick="goOrderDetails(this.innerText)"></a></td>
+					<td th:text="${order.cleanThingDetailsNumber}" />
+					<td th:text="${order.customerName}" />
+					<td th:text="${order.customerPhoneNumber}" />
+					<td th:text="${order.otherName}" />
+					<td th:text="${order.washCountWashUnitThingNumber}" />
+					<td th:text="${order.washWayName}" />
+					<td th:text="${order.finishFlg}" />
+					<td th:text="${order.realDate}" />
+					<td th:text="${order.thingPrice}" />
+					<td th:text="${order.payStatus} == '1'?'是':'否'" />
+					<td th:text="${order.managementNumber}" />
+					<td th:text="${order.deletedFlg}" />
+					<td th:text="${order.orderCreateDate}" />
+					<td th:text="${order.createDate}" />					
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<script type="text/javascript" src="webjars/jquery/2.1.4/jquery.js"></script>
 	<script type="text/javascript"
 		src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript"
+		src="/webjars/datatables/1.10.9/js/jquery.dataTables.min.js"></script>
+	<script src="../../js/datatable.js"></script>
 	<script type="text/javascript">
 		function goOrderDetails(ordernumber) {
 			var linkadd = "/orderDetails?ordernumber=" + ordernumber;
