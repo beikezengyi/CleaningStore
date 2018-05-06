@@ -85,7 +85,8 @@ public class CustomerController {
 					py.setPaymentWay(cu.getPaymentWay());
 					paymentMapper.insertPatmentWithCreateUser(py);
 				}
-				model.put("cu", insertedCustomer);
+				model.put("cu", new CustomerBean());
+				model.put("in", insertedCustomer);
 				model.put("successflg", true);
 			} else {
 				model.put("successflg", false);
@@ -109,27 +110,28 @@ public class CustomerController {
 		return "selectCustomer";
 	}
 
-	@RequestMapping(value = "/updateCustomer/{id}", method = { RequestMethod.GET, RequestMethod.POST })
-	public String updateCustomer(Map<String, Object> model, //
-			@PathVariable(required = false, value = "id") Integer id, //
-			@ModelAttribute(name = "cu") CustomerBean cu) {
+	@GetMapping(value = "/updateCustomer/{id}")
+	public String updateCustomer_g(Map<String, Object> model, //
+			@PathVariable(required = false, value = "id") Integer id) {
+		CustomerBean cu = customerMapper.selectOne(id);
+		cu.setAfterCharge(cu.getAccountBalance());
+		model.put("cu", cu);
+		return "updateCustomer";
+	}
 
-		if (id != null && id != 0) {
-			CustomerBean se = new CustomerBean();
-			se.setCustomerNumber(id);
-			cu = customerMapper.selectOne(id);
-			cu.setAfterCharge(cu.getAccountBalance());
-		} else if (service.checkUpdateCustomer(cu)) {
-			customerMapper.updateCustomer(cu);
-			if (cu.getAccountPayment() != null && cu.getAccountPayment() > 0) {
-				PaymentBean py = new PaymentBean();
-				BeanUtils.copyProperties(cu, py);
-				paymentMapper.insertPatmentWithCharge(py);
-				model.put("chargeflg", true);
-			}
-			model.put("successFlg", true);
-			cu = customerMapper.selectOne(cu.getCustomerNumber());
+	@PostMapping(value = "/updateCustomer")
+	public String updateCustomer_p(Map<String, Object> model, //
+			@ModelAttribute CustomerBean cu) {
+
+		customerMapper.updateCustomer(cu);
+		if (cu.getAccountPayment() != null && cu.getAccountPayment() > 0) {
+			PaymentBean py = new PaymentBean();
+			BeanUtils.copyProperties(cu, py);
+			paymentMapper.insertPatmentWithCharge(py);
+			model.put("chargeflg", true);
 		}
+		model.put("successFlg", true);
+		cu = customerMapper.selectOne(cu.getCustomerNumber());
 		model.put("cu", cu);
 		return "updateCustomer";
 	}

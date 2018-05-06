@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cleaningstore.jdbc.bean.WashWayBean;
 import com.cleaningstore.jdbc.mapper.WashWayMapper;
@@ -74,6 +76,16 @@ public class WashWaySettingController {
 		setting.getMsg().add(count + "件新建成功！");
 		model.addAttribute("setting", setting);
 		return "createWashWaySetting";
+	}
+
+	@PostMapping(value = "/checkWashWaySetting")
+	@ResponseBody
+	public String checkWashWay_p(@RequestParam(value = "washway", required = true) String washway) {
+		WashWayBean ww = washWayMapper.selectWashWayIsExist(washway);
+		if (ww != null) {
+			return ww.getWashWayNumber().toString();
+		}
+		return "";
 	}
 
 	private List<WashWayBean> createInitList() {

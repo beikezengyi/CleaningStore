@@ -46,4 +46,9 @@ public interface ThingMapper {
 			+ " where t2.thingnumber=#{thnumber} "//
 			+ " group by t1.ordernumber order by t1.ordernumber")
 	public List<Integer> canDelete(@Param(value = "thnumber") Integer thnumber);
+
+	@Select(value = " select * from thingtable"//
+			+ " where thingName=#{thingName}") //
+	public ThingBean selectThingIsExist(@Param(value = "thingName") String thingName);
+
 }

@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cleaningstore.jdbc.bean.ThingBean;
 import com.cleaningstore.jdbc.mapper.ThingMapper;
@@ -75,6 +77,16 @@ public class ThingSettingController {
 		setting.getMsg().add(count + "件新建成功！");
 		model.addAttribute("setting", setting);
 		return "createThingSetting";
+	}
+
+	@PostMapping(value = "/checkThingSetting")
+	@ResponseBody
+	public String checkThing_p(@RequestParam(value = "thing", required = true) String thing) {
+		ThingBean t = thingMapper.selectThingIsExist(thing);
+		if (t != null) {
+			return t.getThingNumber().toString();
+		}
+		return "";
 	}
 
 	private List<ThingBean> createInitList() {

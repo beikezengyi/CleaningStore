@@ -18,7 +18,7 @@
 
 			<ul>
 				<li th:each="msg : ${cu.errormsg}"
-					style="font-style: italic; background-color: red; font-size: large;"
+					style="color: red; font-size: large;"
 					th:text="${msg}"></li>
 			</ul>
 			<div class="row">
@@ -120,14 +120,14 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td th:text="${cu.customerNumber}"></td>
-						<td><a href="#" th:text="${cu.customerName}"
+						<td th:text="${in.customerNumber}"></td>
+						<td><a href="#" th:text="${in.customerName}"
 							onclick="selectCustomer(this.innerText)"></a></td>
-						<td th:text="${cu.customerPhoneNumber}" />
-						<td th:text="${cu.customerSexStr}" />
-						<td th:text="${cu.customerAddress}" />
-						<td th:text="${cu.customerFamilies}" />
-						<td th:text="${cu.accountBalance}" />
+						<td th:text="${in.customerPhoneNumber}" />
+						<td th:text="${in.customerSexStr}" />
+						<td th:text="${in.customerAddress}" />
+						<td th:text="${in.customerFamilies}" />
+						<td th:text="${in.accountBalance}" />
 					</tr>
 				</tbody>
 			</table>

@@ -13,47 +13,49 @@
 <body>
 	<div th:include="header"></div>
 	<div class="container">
-		<form action="#" th:action="@{/updateCustomer/0}" 
-		th:object="${cu}" method="post">
-			
+		<form action="#" th:action="@{/updateCustomer}" th:object="${cu}"
+			method="post">
+			<ul>
+				<li th:each="msg : ${cu.errormsg}"
+					style="color: red; font-size: large;" th:text="${msg}"></li>
+			</ul>
 			<div class="row">
-				<label class="col-md-1">会员号码:</label> 
-				<input class="col-md-5"
-					type="text" readonly="readonly" th:field="*{customerNumber}" th:text="${customerNumber}" />
-				<label class="col-md-1">顾客姓名:</label> <input class="col-md-5"
-					type="text"  readonly="readonly" th:field="*{customerName}" th:text="${createCustomer}" />
+				<label class="col-md-2">会员号码:</label> <input class="col-md-4"
+					type="text" readonly="readonly" th:field="*{customerNumber}"
+					th:text="${customerNumber}" /> <label class="col-md-2">顾客姓名:</label>
+				<input class="col-md-4" type="text" readonly="readonly"
+					th:field="*{customerName}" th:text="${createCustomer}" />
 			</div>
-			
+
 			<div class="row">
-				<label class="col-md-1">现在余额:</label> 
-				<input class="col-md-5" id="nowbal"
-					type="text" readonly="readonly" th:field="*{accountBalance}" th:value="${accountBalance}" />
-			</div>			
-						
+				<label class="col-md-2">现在余额:</label> <input class="col-md-4"
+					id="nowbal" type="text" readonly="readonly"
+					th:field="*{accountBalance}" th:value="${accountBalance}" />
+			</div>
+
 			<div class="row">
-				<label class="col-md-1">家庭地址:</label> <input class="col-md-5"
+				<label class="col-md-2">家庭地址:</label> <input class="col-md-4"
 					type="text" th:field="*{customerAddress}"
-					th:text="${customerAddress}" />
-				<label class="col-md-1">顾客电话:</label> <input class="col-md-5"
-					type="number" th:field="*{customerPhoneNumber}"
-					th:text="${customerPhoneNumber}" />
+					th:text="${customerAddress}" /> <label class="col-md-2">顾客电话:</label>
+				<input class="col-md-4" type="number"
+					th:field="*{customerPhoneNumber}" th:text="${customerPhoneNumber}" />
 			</div>
 			<div class="row">
-				<label class="col-md-1">顾客性别:</label> <select class="col-md-5"
+				<label class="col-md-2">顾客性别:</label> <select class="col-md-4"
 					th:field="*{customerSex}">
 					<option value="1">男士</option>
 					<option value="2">女士</option>
 					<option value="3">其他</option>
-				</select> <label class="col-md-1">家庭人数:</label> <input class="col-md-5"
+				</select> <label class="col-md-2">家庭人数:</label> <input class="col-md-4"
 					type="number" th:field="*{customerFamilies}"
 					th:text="${customerFamilies}" />
 			</div>
 
 			<div class="row">
-				<label class="col-md-1">充值金额:</label> <input class="col-md-5"
+				<label class="col-md-2">充值金额:</label> <input class="col-md-4"
 					type="number" th:field="*{accountPayment}"
-					th:text="${accountPayment}" onchange="changeChargeValue(true)" /> <label
-					class="col-md-1">充值方式:</label> <select class="col-md-5"
+					th:text="${accountPayment}" onchange="changeChargeValue(true)" />
+				<label class="col-md-2">充值方式:</label> <select class="col-md-4"
 					th:field="*{paymentWay}">
 					<option value="现金支付" th:select="${paymentWay} == '现金支付'">现金支付</option>
 					<option value="微信支付" th:select="${paymentWay} == '微信支付'">微信支付</option>
@@ -63,45 +65,47 @@
 				</select>
 			</div>
 			<div class="row">
-				<label class="col-md-1">赠送金额:</label>
-				<label class="col-md-1">选择</label> 
+				<label class="col-md-2">赠送金额:</label> <label class="col-md-1">选择</label>
+				<input class="col-md-1" type="radio" th:field="*{freetype}"
+					th:checked="${freetype}" value="true"
+					onclick="changeFreeType(this.id,true)" /> 
+					<select class="col-md-2"
+					id="freeBalanceSe" onchange="changeFreeValue(this.id,true)"
+					th:field="*{freeBalanceSe}">
+					<option value="0" th:selected="${freeBalanceSe} == '0'">0</option>
+					<option value="10" th:selected="${freeBalanceSe} == '10'">10</option>
+					<option value="20" th:selected="${freeBalanceSe} == '20'">20</option>
+					<option value="30" th:selected="${freeBalanceSe} == '30'">30</option>
+					<option value="40" th:selected="${freeBalanceSe} == '40'">40</option>
+					<option value="50" th:selected="${freeBalanceSe} == '50'">50</option>
+					<option value="60" th:selected="${freeBalanceSe} == '60'">60</option>
+					<option value="70" th:selected="${freeBalanceSe} == '70'">70</option>
+					<option value="80" th:selected="${freeBalanceSe} == '80'">80</option>
+					<option value="90" th:selected="${freeBalanceSe} == '90'">90</option>
+					<option value="100" th:selected="${freeBalanceSe} == '100'">100</option>
+				</select> <label class="col-md-1">自定义</label> 
 				<input class="col-md-1"
-					type="radio" th:field="*{freetype}" th:checked="${freetype}"
-					style="width: 30px" value="true" onclick="changeFreeType(this.id,true)" />
-				<select class="col-md-4" id="freeBalanceSe" style="width: 350px"
-					onchange="changeFreeValue(this.id,true)" th:field="*{freeBalanceSe}">
-					<option value="0" th:select="${freeBalanceSe} == '0'">0</option>
-					<option value="10" th:select="${freeBalanceSe} == '10'">10</option>
-					<option value="20" th:select="${freeBalanceSe} == '20'">20</option>
-					<option value="30" th:select="${freeBalanceSe} == '30'">30</option>
-					<option value="40" th:select="${freeBalanceSe} == '40'">40</option>
-					<option value="50" th:select="${freeBalanceSe} == '50'">50</option>
-					<option value="60" th:select="${freeBalanceSe} == '60'">60</option>
-					<option value="70" th:select="${freeBalanceSe} == '70'">70</option>
-					<option value="80" th:select="${freeBalanceSe} == '80'">80</option>
-					<option value="90" th:select="${freeBalanceSe} == '90'">90</option>
-					<option value="100" th:select="${freeBalanceSe} == '100'">100</option>
-				</select> 
-				<label class="col-md-1">自定义</label> 
-				<input class="col-md-1"
-					 type="radio" style="width: 30px"
-					th:field="*{freetype}" th:checked="${freetype}=='false'"
-					value="false" onclick="changeFreeType(this.id,true)" /> 
-				<input class="col-md-3" style="width: 450px"
-					 type="number" th:value="${freeBalanceIn}"
-					th:field="*{freeBalanceIn}" onchange="changeFreeValue(this.id,true)"
-					id="freeBalanceIn" />
+					type="radio" th:field="*{freetype}"
+					th:checked="${freetype}=='false'" value="false"
+					onclick="changeFreeType(this.id,true)" /> 
+				<input class="col-md-4"
+					type="number" th:value="${freeBalanceIn}"
+					th:field="*{freeBalanceIn}"
+					onchange="changeFreeValue(this.id,true)" id="freeBalanceIn" />
 			</div>
 			<div class="row">
-				<label class="col-md-1">本次充值获得金额:</label> <input class="col-md-5"
-					type="number"  id="accountBalance"
-					th:value="'0'" readonly="readonly" /> <label
-					class="col-md-1">本次充值后金额:</label> <input class="col-md-5"
-					th:field="*{afterCharge}" readonly="readonly" type="number" th:value="'0'" />
+				<label class="col-md-2">本次充值获得金额:</label> 
+				<input class="col-md-4"
+					type="number" id="accountBalance" th:value="'0'"
+					readonly="readonly" /> 
+					<label class="col-md-2">本次充值后金额:</label> 
+					<input
+					class="col-md-4" th:field="*{afterCharge}" readonly="readonly"
+					type="number" th:value="'0'" />
 			</div>
 			<div class="row">
 				<input class="col-md-6 col-md-offset-2" type="submit"
-				onclick="alertCharge()" value="更改会员信息或充值" />
+					id="alertCharge" value="更改会员信息或充值" />
 			</div>
 		</form>
 	</div>
@@ -139,9 +143,10 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="/webjars/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="/webjars/jquery/2.1.4/jquery.min.js"></script>
 	<script type="text/javascript"
 		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="../../js/createCustomer.js"></script>
+	<script src="/js/createCustomer.js" th:src="@{/js/createCustomer.js}"></script>
 </body>
 </html>

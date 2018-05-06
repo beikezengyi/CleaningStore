@@ -17,6 +17,7 @@ public class CustomerBean {
 	private Integer customerFamilies;
 	private Integer accountPayment;
 	private Integer accountBalance;
+	private String createDateStr;
 
 	private List<String> errormsg = new ArrayList<>();
 

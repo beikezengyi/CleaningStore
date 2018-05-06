@@ -12,22 +12,22 @@
 <body>
 	<div th:include="header"></div>
 	<div class="container">
-		<form action="#" th:action="@{/createThingSetting}" th:object="${setting}"
-			method="post">
+		<form action="#" th:action="@{/createThingSetting}"
+			th:object="${setting}" method="post">
 			<ul>
 				<li th:each="m:${setting.msg}" th:text="${m}"></li>
 			</ul>
 			<span>排序番号越大，出现在下拉菜单的位置越靠前。</span>
 			<table class="table table-bordered table-striped">
 				<thead>
-					<tr class="row">
-						<td class="col-md-2">番号</td>
+					<tr>
+						<td class="col-md-1">番号(自动採番)</td>
 						<td class="col-md-5">排序号码(降序)</td>
-						<td class="col-md-5">衣物名</td>
+						<td class="col-md-6">衣物名</td>
 					</tr>
-				</thead>
+				</thead>	
 				<tbody>
-					<tr  class="row" th:each="th,rowStat : ${setting.thlist}">
+					<tr th:each="th,rowStat : ${setting.thlist}">
 						<td><input type="number" readonly="readonly"
 							th:value="${th.thingNumber}" style="background-color: #FFD"
 							th:field="*{thlist[__${rowStat.index}__].thingNumber}" /></td>
@@ -35,7 +35,8 @@
 							th:field="*{thlist[__${rowStat.index}__].sortNumber}"
 							maxlength="" /></td>
 						<td><input type="text" th:value="${th.thingName}"
-							th:field="*{thlist[__${rowStat.index}__].thingName}" /></td>
+							th:field="*{thlist[__${rowStat.index}__].thingName}" /> <span
+							th:id="'msg'+${rowStat.index}"></span></td>
 					</tr>
 				</tbody>
 			</table>
@@ -47,6 +48,6 @@
 	<script type="text/javascript" src="/webjars/jquery/2.1.4/jquery.js"></script>
 	<script type="text/javascript"
 		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="/static/js/createOrder.js" th:src="@{/js/createOrder.js}"></script>
+	<script src="/static/js/setting.js" th:src="@{/js/setting.js}"></script>
 </body>
 </html>

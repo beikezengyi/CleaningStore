@@ -1,3 +1,25 @@
+/**
+ * 
+ */
+
+$('#alertCharge').click(
+		function() {
+			var accountPayment = $('#accountPayment').val();
+			var accountBalance = $('#accountBalance').val();
+			if (accountPayment > 0) {
+				if (window.confirm('是否充值' + accountPayment + '元,赠送金额为'
+						+ (Number(accountBalance) - Number(accountPayment))
+						+ '元')) {
+					return true;
+				} else {
+					window.alert('充值已取消，顾客信息未提交。');
+					return false;
+				}
+			} else {
+				return true;
+			}
+		});
+
 function selectCustomer(value) {
 	var linkadd = "/chooseCustomer/" + value;
 	window.location.href = linkadd;
@@ -82,21 +104,5 @@ function changeChargeValue(flg) {
 	} else {
 		window.document.getElementById("accountBalance").value = 0;
 		window.document.getElementById("afterCharge").value = nowbal;
-	}
-}
-
-function alertCharge() {
-	var accountPayment=window.document.getElementById("accountPayment").value;
-	var accountBalance=window.document.getElementById("accountBalance").value;
-	if (accountPayment > 0){
-		if (window.confirm('是否充值'+accountPayment+'元,赠送金额为'
-				+(Number(accountBalance)-Number(accountPayment))+'元')) {
-			return true; 
-		} else {
-			window.alert('充值取消，未充值。');
-			return false;
-		}
-	}else{
-		return true; 
 	}
 }

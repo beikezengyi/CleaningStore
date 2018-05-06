@@ -13,6 +13,7 @@ public class CustomerSqlProvider {
 		return new SQL() {
 			{
 				SELECT("*");
+				SELECT("to_char(createDate,'yyyy-mm-dd') as createDateStr");
 				SELECT("case when customersex = 1 then '男士' " + "when customersex = 2 then '女士'  "
 						+ "else '其他' end as customerSexStr ");
 				FROM("customertable");

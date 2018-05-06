@@ -19,6 +19,8 @@ public class AnalysisOrderResult {
 	
 	private int totalPayment;
 	
+	private int totalPaymentByAccount;
+	
 	private int totalCharge;
 
 }

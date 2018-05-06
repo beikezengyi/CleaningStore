@@ -56,6 +56,7 @@
 					<td>住址</td>
 					<td>家庭构成人数</td>
 					<td>账户余额</td>
+					<td>注册日</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -68,6 +69,7 @@
 					<td th:text="${cu.customerAddress}" />
 					<td th:text="${cu.customerFamilies}" />
 					<td th:text="${cu.accountBalance}" />
+					<td th:text="${cu.createDateStr}" />
 				</tr>
 			</tbody>
 		</table>

@@ -39,11 +39,15 @@ public interface WashWayMapper {
 			+ " #{wy.washWayName}, "//
 			+ " #{wy.sortNumber})") //
 	public int inertWashWay(@Param(value = "wy") WashWayBean wy);
-	
+
 	@Select(value = " select t1.ordernumber from orderdetailstable as t2 " //
 			+ " left outer join ordertable as t1" //
 			+ " on(t1.cleanthingnumber=t2.cleanthingnumber)" //
 			+ " where t2.washwaynumber=#{wynumber} "//
 			+ " group by t1.ordernumber order by t1.ordernumber")
-	public List<Integer> canDelete(@Param(value = "wynumber") Integer wynumber);	
+	public List<Integer> canDelete(@Param(value = "wynumber") Integer wynumber);
+
+	@Select(value = " select * from WashWaytable"//
+			+ " where washWayName=#{washWayName}") //
+	public WashWayBean selectWashWayIsExist(@Param(value = "washWayName") String washWayName);
 }
