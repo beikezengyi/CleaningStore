@@ -70,6 +70,7 @@
 						<td>订单号</td>
 						<td>订单内含明细番号</td>
 						<td>充值额</td>
+						<td>赠送额</td>
 						<td>消费额</td>
 						<td>消费/充值前余额</td>
 						<td>消费/充值后余额</td>
@@ -87,6 +88,7 @@
 						<td th:text="${p.orderNumber}">订单号</td>
 						<td th:text="${p.cleanThingDetailsNumber}">订单内含明细番号</td>
 						<td th:text="${p.chargePayment}">充值额</td>
+						<td th:text="${p.giveAmount}">赠送额</td>
 						<td th:text="${p.thingPrice}">消费额</td>
 						<td th:text="${p.accountBalanceBefore}">消费/充值前余额</td>
 						<td th:text="${p.accountBalanceAtfer}">消费/充值后余额</td>

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CleaningUtils {
+	
+	public static final String paywithaccountbal="账户余额支付";
 
 	public boolean isExist(Object obj) {
 

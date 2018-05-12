@@ -8,6 +8,23 @@ import com.cleaningstore.web.bean.condition.SelectPaymentCondition;
 
 public class PaymentSqlProvider {
 
+	public String insertPatmentWithCreateUser(final PaymentBean py) {
+		return new SQL() {
+			{
+				INSERT_INTO("paymenttable");
+				VALUES("paymentNumber", "(select coalesce(max(paymentNumber)+1,1) from paymenttable)");
+				VALUES("paymentway", "#{paymentWay}");
+				VALUES("consumetype", "1");// 1:充值
+				VALUES("customerNumber", "#{customerNumber}");
+				VALUES("chargePayment", "#{chargePayment}");
+				VALUES("giveAmount", "#{giveAmount}");
+				VALUES("accountBalanceBefore", "0");
+				VALUES("accountBalanceAtfer", "#{accountBalanceAtfer}");
+				VALUES("paymengtMemo", "'新用户充值'");
+			}
+		}.toString();
+	}
+	
 	public String insertPaymentWithPayOrder(final PaymentBean py) {
 		return new SQL() {
 			{
@@ -20,15 +37,33 @@ public class PaymentSqlProvider {
 				VALUES("cleanthingnumber", "#{cleanThingNumber}");
 				VALUES("cleanThingDetailsNumber", "#{cleanThingDetailsNumber}");
 				VALUES("thingPrice", "#{thingPrice}");
-				if (py.getPaymentWay().equals("账户余额支付")) {
+				if (py.getPaymentWay().equals(CleaningUtils.paywithaccountbal)) {
 					VALUES("accountBalanceBefore", "#{accountBalance}");
 					VALUES("accountBalanceAtfer", "#{accountBalance} - #{thingPrice}");
 				}
 				VALUES("paymengtMemo", "'订单扣款'");
+				VALUES("giveAmount", "#{giveAmount}");
 			}
 		}.toString();
 	}
 
+	public String insertPatmentWithCharge(final PaymentBean py) {
+		return new SQL() {
+			{
+				INSERT_INTO("paymenttable");
+				VALUES("paymentNumber", "(select coalesce(max(paymentNumber)+1,1) from paymenttable)");
+				VALUES("paymentway", "#{paymentWay}");
+				VALUES("consumetype", "1");// 1:充值
+				VALUES("customerNumber", "#{customerNumber}");
+				VALUES("chargePayment", "#{chargePayment}");
+				VALUES("giveAmount", "#{giveAmount}");
+				VALUES("accountBalanceBefore", "#{accountPayment}");
+				VALUES("accountBalanceAtfer", "#{afterCharge}");
+				VALUES("paymengtMemo", "'充值'");
+			}
+		}.toString();
+	}
+	
 	public String selectPayment(final SelectPaymentCondition searchPayment) {
 		CleaningUtils util = new CleaningUtils();
 		return new SQL() {
@@ -45,6 +80,7 @@ public class PaymentSqlProvider {
 				SELECT("t1.accountbalancebefore");
 				SELECT("t1.accountbalanceatfer");
 				SELECT("t1.paymengtmemo");
+				SELECT("t1.giveAmount");
 				SELECT("to_char(t1.paymentdate,'yyyy-mm-dd hh24:mi') as paymentDate");
 				SELECT("t2.customername");
 				FROM("paymenttable as t1 ");

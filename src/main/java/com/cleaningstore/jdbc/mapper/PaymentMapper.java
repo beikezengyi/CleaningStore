@@ -2,7 +2,6 @@ package com.cleaningstore.jdbc.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -16,30 +15,13 @@ import com.cleaningstore.web.bean.result.PaymentResult;
 @Repository
 public interface PaymentMapper {
 
-	@Insert(value = "insert into paymenttable" //
-			+ " (paymentNumber,paymentway,consumetype," + "customerNumber,chargePayment,accountBalanceBefore,"//
-			+ "accountBalanceAtfer,paymengtMemo)" //
-			+ " values("//
-			+ " (select coalesce(max(paymentNumber)+1,1) from paymenttable),"//
-			+ "#{paymentWay},1," // 1:充值
-			+ "#{customerNumber},#{chargePayment}," + "0,#{accountBalanceAtfer},'新用户充值')")
+	@InsertProvider(type = PaymentSqlProvider.class, method = "insertPatmentWithCreateUser")
 	public int insertPatmentWithCreateUser(PaymentBean py);
 
 	@InsertProvider(type = PaymentSqlProvider.class, method = "insertPaymentWithPayOrder")
 	public int insertPatmentWithPay(PaymentBean py);
 
-	@Insert(value = "insert into paymenttable" //
-			+ " (paymentNumber,paymentway,consumetype," //
-			+ "customerNumber,chargePayment,accountBalanceBefore," //
-			+ "accountBalanceAtfer,paymengtMemo)" //
-			+ " values("//
-			+ " (select coalesce(max(paymentNumber)+1,1) from paymenttable),"//
-			+ "#{paymentWay},1," // 1:充值
-			+ "#{customerNumber},"//
-			+ "#{accountPayment}," // 充值金额
-			+ "#{accountBalance},"// 充值前
-			+ "#{afterCharge},"// 充值后
-			+ "'充值')")
+	@InsertProvider(type = PaymentSqlProvider.class, method = "insertPatmentWithCharge")
 	public int insertPatmentWithCharge(PaymentBean py);
 
 	@SelectProvider(type = PaymentSqlProvider.class, method = "selectPayment")

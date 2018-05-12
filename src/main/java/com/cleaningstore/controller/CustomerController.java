@@ -65,33 +65,47 @@ public class CustomerController {
 		return "createOrder";
 	}
 
-	@RequestMapping(value = "/createCustomer", method = { RequestMethod.GET, RequestMethod.POST })
-	public String createCustomer(Map<String, Object> model, //
+	@GetMapping(value = "/createCustomer")
+	public String createCustomer_g(Map<String, Object> model) {
+
+		model.put("cu", new CustomerBean());
+		return "createCustomer";
+	}
+
+	@PostMapping(value = "/createCustomer")
+	public String createCustomer_p(Map<String, Object> model, //
 			@ModelAttribute(name = "cu") CustomerBean cu) {
 
-		if (cu == null || cu.equals(new CustomerBean())) {
-			cu = new CustomerBean();
-		} else {
-			if (service.checkCustomer(cu)) {
-				// insert
-				customerMapper.insertCustomer(cu);
-				CustomerBean insertedCustomer = customerMapper.selectInserted(cu.getCustomerName());
-				// payment
-				if (cu.getAccountPayment() != null && cu.getAccountPayment() > 0) {
-					PaymentBean py = new PaymentBean();
-					py.setCustomerNumber(insertedCustomer.getCustomerNumber());
-					py.setChargePayment(cu.getAccountPayment());
-					py.setAccountBalanceAtfer(cu.getAccountBalance());
-					py.setPaymentWay(cu.getPaymentWay());
-					paymentMapper.insertPatmentWithCreateUser(py);
-				}
-				model.put("cu", new CustomerBean());
-				model.put("in", insertedCustomer);
-				model.put("successflg", true);
-			} else {
-				model.put("successflg", false);
-				model.put("cu", cu);
+		if (service.checkCustomer(cu)) {
+			// insert
+			Integer giveAmount = 0;
+			try {
+				giveAmount = cu.getAfterCharge() - cu.getAccountPayment();
+			} catch (NullPointerException e) {
+				giveAmount = 0;
 			}
+			CustomerBean insertedCustomer = customerMapper.insertCustomer(cu);
+			// CustomerBean insertedCustomer =
+			// customerMapper.selectInserted(cu.getCustomerName());
+			// payment
+			if (cu.getAccountPayment() != null && cu.getAccountPayment() > 0) {
+				PaymentBean py = new PaymentBean();
+				py.setCustomerNumber(insertedCustomer.getCustomerNumber());
+				py.setChargePayment(cu.getAccountPayment());
+				py.setAccountBalanceAtfer(insertedCustomer.getAccountBalance());
+				py.setPaymentWay(cu.getPaymentWay());
+				py.setGiveAmount(giveAmount);
+				paymentMapper.insertPatmentWithCreateUser(py);
+			}
+			model.put("cu", new CustomerBean());
+			model.put("in", insertedCustomer);
+			model.put("successflg", true);
+			model.put("chargeflg", true);
+			model.put("chargeText", "充值" + cu.getAccountPayment() + "元成功，赠送" //
+					+ giveAmount + "元");
+		} else {
+			model.put("successflg", false);
+			model.put("cu", cu);
 		}
 		return "createCustomer";
 	}
@@ -125,10 +139,15 @@ public class CustomerController {
 
 		customerMapper.updateCustomer(cu);
 		if (cu.getAccountPayment() != null && cu.getAccountPayment() > 0) {
+			int giveAmount = cu.getAfterCharge() - cu.getAccountPayment()
+					- (cu.getAccountBalance() == null ? 0 : cu.getAccountBalance());
 			PaymentBean py = new PaymentBean();
 			BeanUtils.copyProperties(cu, py);
+			py.setGiveAmount(giveAmount);
 			paymentMapper.insertPatmentWithCharge(py);
 			model.put("chargeflg", true);
+			model.put("chargeText", "充值" + cu.getAccountPayment() + "元成功，赠送" //
+					+ giveAmount + "元");
 		}
 		model.put("successFlg", true);
 		cu = customerMapper.selectOne(cu.getCustomerNumber());

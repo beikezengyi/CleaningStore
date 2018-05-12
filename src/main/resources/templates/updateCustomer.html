@@ -19,6 +19,7 @@
 				<li th:each="msg : ${cu.errormsg}"
 					style="color: red; font-size: large;" th:text="${msg}"></li>
 			</ul>
+			<h2 th:if="${chargeflg}" th:text="${chargeText}"></h2>
 			<div class="row">
 				<label class="col-md-2">会员号码:</label> <input class="col-md-4"
 					type="text" readonly="readonly" th:field="*{customerNumber}"
@@ -28,8 +29,7 @@
 			</div>
 
 			<div class="row">
-				<label class="col-md-2">现在余额:</label> <input class="col-md-4"
-					id="nowbal" type="text" readonly="readonly"
+				<label class="col-md-2">现在余额:</label> <input class="col-md-4" type="text" readonly="readonly"
 					th:field="*{accountBalance}" th:value="${accountBalance}" />
 			</div>
 
@@ -54,8 +54,9 @@
 			<div class="row">
 				<label class="col-md-2">充值金额:</label> <input class="col-md-4"
 					type="number" th:field="*{accountPayment}"
-					th:text="${accountPayment}" onchange="changeChargeValue(true)" />
-				<label class="col-md-2">充值方式:</label> <select class="col-md-4"
+					th:text="${accountPayment}" />
+				<label class="col-md-2">充值方式:</label> 
+				<select class="col-md-4"
 					th:field="*{paymentWay}">
 					<option value="现金支付" th:select="${paymentWay} == '现金支付'">现金支付</option>
 					<option value="微信支付" th:select="${paymentWay} == '微信支付'">微信支付</option>
@@ -65,13 +66,11 @@
 				</select>
 			</div>
 			<div class="row">
-				<label class="col-md-2">赠送金额:</label> <label class="col-md-1">选择</label>
+				<label class="col-md-2">赠送金额:</label> 
+				<label class="col-md-1">选择</label>
 				<input class="col-md-1" type="radio" th:field="*{freetype}"
-					th:checked="${freetype}" value="true"
-					onclick="changeFreeType(this.id,true)" /> 
-					<select class="col-md-2"
-					id="freeBalanceSe" onchange="changeFreeValue(this.id,true)"
-					th:field="*{freeBalanceSe}">
+					th:checked="${freetype}" value="true" /> 
+					<select class="col-md-2" id="freeBalanceSe" th:field="*{freeBalanceSe}">
 					<option value="0" th:selected="${freeBalanceSe} == '0'">0</option>
 					<option value="10" th:selected="${freeBalanceSe} == '10'">10</option>
 					<option value="20" th:selected="${freeBalanceSe} == '20'">20</option>
@@ -83,23 +82,18 @@
 					<option value="80" th:selected="${freeBalanceSe} == '80'">80</option>
 					<option value="90" th:selected="${freeBalanceSe} == '90'">90</option>
 					<option value="100" th:selected="${freeBalanceSe} == '100'">100</option>
-				</select> <label class="col-md-1">自定义</label> 
+				</select> 
+				<label class="col-md-1">自定义</label> 
 				<input class="col-md-1"
-					type="radio" th:field="*{freetype}"
-					th:checked="${freetype}=='false'" value="false"
-					onclick="changeFreeType(this.id,true)" /> 
-				<input class="col-md-4"
-					type="number" th:value="${freeBalanceIn}"
-					th:field="*{freeBalanceIn}"
-					onchange="changeFreeValue(this.id,true)" id="freeBalanceIn" />
+					type="radio" th:field="*{freetype}" th:checked="${freetype}=='false'" value="false" /> 
+				<input class="col-md-4" type="number" th:value="${freeBalanceIn}"
+					th:field="*{freeBalanceIn}" />
 			</div>
 			<div class="row">
 				<label class="col-md-2">本次充值获得金额:</label> 
-				<input class="col-md-4"
-					type="number" id="accountBalance" th:value="'0'"
+				<input class="col-md-4" type="number" id="getthistime" th:value="'0'"
 					readonly="readonly" /> 
-					<label class="col-md-2">本次充值后金额:</label> 
-					<input
+				<label class="col-md-2">本次充值后金额:</label> <input
 					class="col-md-4" th:field="*{afterCharge}" readonly="readonly"
 					type="number" th:value="'0'" />
 			</div>
@@ -113,7 +107,6 @@
 	<div class="container">
 		<div class="table-responsive" th:if="${successFlg}">
 			<h2>会员信息更新成功。</h2>
-			<h3 th:if="${chargeflg}">充值成功。</h3>
 			<h3>点击顾客对应的顾客番号可其创建订单。</h3>
 			<table id="customertable" class="table table-bordered table-striped">
 				<thead>
@@ -133,7 +126,7 @@
 							onclick="selectCustomer(this.innerText)"></a></td>
 						<td th:text="${cu.customerName}"></td>
 						<td th:text="${cu.customerPhoneNumber}" />
-						<td th:text="${cu.customerSexStr}" />
+						<td th:text="${cu.customerSex} =='1'?'男士':(${cu.customerSex}=='2'?'女士':'其他')" />
 						<td th:text="${cu.customerAddress}" />
 						<td th:text="${cu.customerFamilies}" />
 						<td th:text="${cu.accountBalance}" />

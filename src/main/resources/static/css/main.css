@@ -64,9 +64,11 @@ center {
 
 input:read-only { 
     color: #8c8c8c;
+    background-color: #d8cee6;
 }
 select:disabled {
     color: #8c8c8c;
+    background-color: #d8cee6;
 }
 
 .titleLink {

@@ -1,21 +1,81 @@
-/**
- * 
- */
+function parse(str) {
+	return parseInt(str) || 0;
+}
+
+$('#accountPayment').change(function() {
+	var accountPayment = parse($(this).val());
+	var accountBalance = parse($('#accountBalance').val());
+	var freetype = $("input[id*='freetype']").filter(":checked");
+	var giveAmount = 0;
+	if (freetype.length == 1) {
+		giveAmount = parse($(freetype).next().val());
+	}
+	setCommonFunction(accountPayment, accountBalance, giveAmount);
+});
+
+$("[id*='freetype']").change(function() {
+	var id = $(this).attr('id');
+	if (id.replace("freetype", "") == '1') {
+		$('#freetype2').next().attr('readonly', 'readonly');
+		$('#freetype1').next().attr('disabled', false);
+	} else {
+		$('#freetype2').next().attr('readonly', false);
+		$('#freetype1').next().attr('disabled', 'disabled');
+	}
+	var accountPayment = parse($('#accountPayment').val());
+	var accountBalance = parse($('#accountBalance').val());
+	var giveAmount = parse($(this).next().val());
+	setCommonFunction(accountPayment, accountBalance, giveAmount);
+});
+
+function setCommonFunction(accountPayment, accountBalance, giveAmount) {
+	if (accountPayment > 0) {
+		var thistime = giveAmount + accountPayment;
+		$('#getthistime').val(thistime);
+		$('#afterCharge').val(thistime + accountBalance);
+	} else {
+		$('#getthistime').val('0');
+		$('#afterCharge').val(accountBalance);
+	}
+}
+
+$("[id*='freeBalance']").change(function() {
+	var freetype = $("input[id*='freetype']").filter(":checked");
+	var giveAmount = 0;
+	if (freetype.length == 1) {
+		giveAmount = parse($(this).val());
+	}
+	var accountPayment = parse($('#accountPayment').val());
+	var accountBalance = parse($('#accountBalance').val());
+	setCommonFunction(accountPayment, accountBalance, giveAmount);
+});
 
 $('#alertCharge').click(
 		function() {
-			var accountPayment = $('#accountPayment').val();
-			var accountBalance = $('#accountBalance').val();
+			var accountPayment = parse($('#accountPayment').val());
 			if (accountPayment > 0) {
+				var freetype = $("input[id*='freetype']").filter(":checked");
+				var giveAmount = 0;
+				if (freetype.length == 1) {
+					giveAmount = parse($(freetype).next().val());
+				}
 				if (window.confirm('是否充值' + accountPayment + '元,赠送金额为'
-						+ (Number(accountBalance) - Number(accountPayment))
-						+ '元')) {
+						+ giveAmount + '元')) {
+					if (giveAmount >= accountPayment) {
+						if (window.confirm("警告:赠送金额大于或等于充值额，是否继续?")) {
+							return true;
+						} else {
+							window.alert('充值已取消，顾客信息未提交。');
+							return false;
+						}
+					}
 					return true;
 				} else {
 					window.alert('充值已取消，顾客信息未提交。');
 					return false;
 				}
 			} else {
+				// 仅做修改信息不充值
 				return true;
 			}
 		});
@@ -23,86 +83,4 @@ $('#alertCharge').click(
 function selectCustomer(value) {
 	var linkadd = "/chooseCustomer/" + value;
 	window.location.href = linkadd;
-}
-
-function changeFreeValue(id, flg) {
-	var nowbal = 0;
-	if (flg == true) {
-		nowbal = window.document.getElementById("nowbal").value;
-	}
-	var freeAmount = window.document.getElementById(id).value;
-	var chargeAmount = window.document.getElementById("accountPayment").value;
-	var countAmount = 0;
-	var selected;
-	if (chargeAmount > 0) {
-		if (id == "freeBalanceSe") {
-			selected = window.document.getElementById("freetype1").checked;
-			if (selected) {
-				countAmount = Number(chargeAmount) + Number(freeAmount);
-				window.document.getElementById("accountBalance").value = countAmount;
-				window.document.getElementById("afterCharge").value = countAmount
-						+ Number(nowbal);
-			}
-		} else {
-			selected = window.document.getElementById("freetype2").checked;
-			if (selected) {
-				countAmount = Number(chargeAmount) + Number(freeAmount);
-				window.document.getElementById("accountBalance").value = countAmount;
-				window.document.getElementById("afterCharge").value = countAmount
-						+ Number(nowbal);
-			}
-		}
-	} else {
-		window.document.getElementById("accountBalance").value = nowbal;
-		window.document.getElementById("afterCharge").value = nowbal;
-	}
-}
-
-function changeFreeType(id, flg) {
-	var nowbal = 0;
-	if (flg == true) {
-		nowbal = window.document.getElementById("nowbal").value;
-	}
-	var freeAmount = 0;
-	var chargeAmount = window.document.getElementById("accountPayment").value;
-
-	if (chargeAmount > 0) {
-		if (id == "freetype1") {
-			freeAmount = window.document.getElementById("freeBalanceSe").value;
-		} else {
-			freeAmount = window.document.getElementById("freeBalanceIn").value;
-		}
-		countAmount = Number(chargeAmount) + Number(freeAmount);
-		window.document.getElementById("accountBalance").value = countAmount;
-		window.document.getElementById("afterCharge").value = countAmount
-				+ Number(nowbal);
-	} else {
-		window.document.getElementById("accountBalance").value = nowbal;
-		window.document.getElementById("afterCharge").value = nowbal;
-	}
-}
-
-function changeChargeValue(flg) {
-	var nowbal = 0;
-	if (flg == true) {
-		nowbal = window.document.getElementById("nowbal").value;
-	}
-	var chargeAmount = window.document.getElementById("accountPayment").value;
-
-	if (chargeAmount > 0) {
-		var selected = window.document.getElementById("freetype1").checked;
-		var freeAmount = 0;
-		if (selected) {
-			freeAmount = window.document.getElementById("freeBalanceSe").value;
-		} else {
-			freeAmount = window.document.getElementById("freeBalanceIn").value;
-		}
-		countAmount = Number(chargeAmount) + Number(freeAmount);
-		window.document.getElementById("accountBalance").value = countAmount;
-		window.document.getElementById("afterCharge").value = Number(countAmount)
-				+ Number(nowbal);
-	} else {
-		window.document.getElementById("accountBalance").value = 0;
-		window.document.getElementById("afterCharge").value = nowbal;
-	}
 }

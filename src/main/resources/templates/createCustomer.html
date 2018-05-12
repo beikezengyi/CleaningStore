@@ -18,13 +18,14 @@
 
 			<ul>
 				<li th:each="msg : ${cu.errormsg}"
-					style="color: red; font-size: large;"
-					th:text="${msg}"></li>
+					style="color: red; font-size: large;" th:text="${msg}"></li>
 			</ul>
 			<div class="row">
-				<label class="col-md-1">顾客姓名:</label> <input class="col-md-5"
+				<label class="col-md-1">顾客姓名:</label> <input class="col-md-3"
 					type="text" required="required" th:field="*{customerName}"
-					th:text="${createCustomer}" /> <label class="col-md-1">顾客电话:</label>
+					th:text="${createCustomer}" />
+					<span class="col-md-2" id="customerNameMsg"></span>
+					 <label class="col-md-1">顾客电话:</label>
 				<input class="col-md-5" type="number"
 					th:field="*{customerPhoneNumber}" th:text="${customerPhoneNumber}" />
 			</div>
@@ -48,9 +49,8 @@
 			<div class="row">
 				<label class="col-md-1">充值金额:</label> <input class="col-md-5"
 					type="number" th:field="*{accountPayment}"
-					th:text="${accountPayment}" onchange="changeChargeValue(false)" />
-				<label class="col-md-1">充值方式:</label> <select class="col-md-5"
-					th:field="*{paymentWay}">
+					th:text="${accountPayment}" /> <label class="col-md-1">充值方式:</label>
+				<select class="col-md-5" th:field="*{paymentWay}">
 					<option value="现金支付" th:select="${paymentWay} == '现金支付'">现金支付</option>
 					<option value="微信支付" th:select="${paymentWay} == '微信支付'">微信支付</option>
 					<option value="支付宝支付" th:select="${paymentWay} == '支付宝支付'">支付宝支付</option>
@@ -59,13 +59,10 @@
 				</select>
 			</div>
 			<div class="row">
-				<label class="col-md-1">赠送金额:</label> 
-				<label class="col-md-1">选择</label>
+				<label class="col-md-1">赠送金额:</label> <label class="col-md-1">选择</label>
 				<input class="col-md-1" type="radio" th:field="*{freetype}"
-					th:checked="${freetype}" value="true"
-					onclick="changeFreeType(this.id,false)" /> 
-				<select class="col-md-3" id="freeBalanceSe" onchange="changeFreeValue(this.id,false)"
-					th:field="*{freeBalanceSe}">
+					th:checked="${freetype}" value="true" /> <select class="col-md-3"
+					id="freeBalanceSe" th:field="*{freeBalanceSe}">
 					<option value="0" th:select="${freeBalanceSe} == '0'">0</option>
 					<option value="10" th:select="${freeBalanceSe} == '10'">10</option>
 					<option value="20" th:select="${freeBalanceSe} == '20'">20</option>
@@ -77,27 +74,21 @@
 					<option value="80" th:select="${freeBalanceSe} == '80'">80</option>
 					<option value="90" th:select="${freeBalanceSe} == '90'">90</option>
 					<option value="100" th:select="${freeBalanceSe} == '100'">100</option>
-				</select> 
-				
-				<label class="col-md-1">自定义</label> 
-				<input class="col-md-1" type="radio" th:field="*{freetype}"
-					th:checked="${freetype}=='false'" value="false"
-					onclick="changeFreeType(this.id,false)" /> 
-				<input class="col-md-4"
-					type="number" th:value="${freeBalanceIn}"
-					th:field="*{freeBalanceIn}"
-					onchange="changeFreeValue(this.id,false)" id="freeBalanceIn" />
+				</select> <label class="col-md-1">自定义</label> <input class="col-md-1"
+					type="radio" th:field="*{freetype}"
+					th:checked="${freetype}=='false'" value="false" /> <input
+					class="col-md-4" type="number" th:value="${freeBalanceIn}"
+					th:field="*{freeBalanceIn}" />
 			</div>
 			<div class="row">
 				<label class="col-md-1">本次充值获得金额:</label> <input class="col-md-5"
-					type="number" th:field="*{accountBalance}"
-					th:value="${successflg} == true ? 0 : ${accountBalance}"
-					readonly="readonly" /> <label class="col-md-1">本次充值后金额:</label> <input
-					class="col-md-5" id="afterCharge" readonly="readonly" type="number"
-					th:value="'0'" />
+					type="number" id="getthistime" th:value="'0'" readonly="readonly" />
+				<label class="col-md-1">本次充值后金额:</label> <input class="col-md-5"
+					th:field="*{afterCharge}" readonly="readonly" type="number" th:value="'0'" />
 			</div>
 			<div class="row">
-				<input class="col-md-6 col-md-offset-2" type="submit" value="注册新会员" />
+				<input class="col-md-6 col-md-offset-2" id="alertCharge"
+					type="submit" value="注册新会员" />
 			</div>
 		</form>
 	</div>
@@ -124,7 +115,7 @@
 						<td><a href="#" th:text="${in.customerName}"
 							onclick="selectCustomer(this.innerText)"></a></td>
 						<td th:text="${in.customerPhoneNumber}" />
-						<td th:text="${in.customerSexStr}" />
+						<td th:text="${in.customerSex} =='1'?'男士':(${in.customerSex}=='2'?'女士':'其他')" />
 						<td th:text="${in.customerAddress}" />
 						<td th:text="${in.customerFamilies}" />
 						<td th:text="${in.accountBalance}" />

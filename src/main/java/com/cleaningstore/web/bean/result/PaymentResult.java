@@ -17,6 +17,7 @@ public class PaymentResult {
 	private Integer cleanThingNumber;
 	private Integer cleanThingDetailsNumber;
 	private Integer chargePayment;
+	private Integer giveAmount;
 	private Integer thingPrice;
 	private Integer accountBalanceBefore;
 	private Integer accountBalanceAtfer;

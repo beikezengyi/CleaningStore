@@ -21,6 +21,7 @@ import com.cleaningstore.jdbc.mapper.OrderDetailsMapper;
 import com.cleaningstore.jdbc.mapper.PaymentMapper;
 import com.cleaningstore.jdbc.mapper.ThingMapper;
 import com.cleaningstore.jdbc.mapper.WashWayMapper;
+import com.cleaningstore.service.CleaningUtils;
 import com.cleaningstore.service.OrderDetailsService;
 import com.cleaningstore.web.bean.result.FromBean;
 import com.cleaningstore.web.bean.result.OrderDetailsResult;
@@ -78,14 +79,17 @@ public class OrderDetailsController {
 						&& dbStatus != 3//
 						&& dbStatus != 2) {
 
-					if (eachDe.getPaymentWay().equals("账户余额支付")) {
-						// 账户扣款
-						customerMapper.updateCustomerPaied(orderNumber, eachDe.getThingPrice());
-					}
-
 					PaymentBean py = new PaymentBean();
 					BeanUtils.copyProperties(eachDe, py);
 					py.setOrderNumber(orderNumber);
+					py.setAccountBalance(fromBean.getAccountBalance());
+
+					if (eachDe.getPaymentWay().equals(CleaningUtils.paywithaccountbal)) {
+						// 账户扣款
+						Integer accountbalance = customerMapper.updateCustomerPaied(orderNumber,
+								eachDe.getThingPrice());
+						fromBean.setAccountBalance(accountbalance);
+					}
 					// 扣款记录
 					paymentMapper.insertPatmentWithPay(py);
 				}

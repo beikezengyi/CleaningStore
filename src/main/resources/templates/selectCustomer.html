@@ -45,7 +45,8 @@
 	</div>
 	<div class="container">
 		<h1>顾客一览</h1>
-		<span>点击顾客对应的顾客番号可其更改个人信息及充值。</span>
+		<h3>点击顾客番号可其更改个人信息及充值。</h3>
+		<h3>点击顾客名字创建订单。</h3>
 		<table id="datatable" class="table table-bordered table-striped">
 			<thead>
 				<tr>
@@ -63,9 +64,10 @@
 				<tr th:each="cu : ${allCustomer}">
 					<td><a href="#" th:text="${cu.customerNumber}"
 						onclick="updateCustomer(this.innerText)"></a></td>
-					<td th:text="${cu.customerName}"></td>
+					<td ><a href="#" th:text="${cu.customerName}"
+						onclick="selectCustomer(this.innerText)"></a></td>
 					<td th:text="${cu.customerPhoneNumber}" />
-					<td th:text="${cu.customerSexStr}" />
+					<td th:text="${cu.customerSex} =='1'?'男士':(${cu.customerSex}=='2'?'女士':'其他')" />
 					<td th:text="${cu.customerAddress}" />
 					<td th:text="${cu.customerFamilies}" />
 					<td th:text="${cu.accountBalance}" />
@@ -84,6 +86,10 @@
 	<script>
 		function updateCustomer(value) {
 			var linkadd = "/updateCustomer/" + value;
+			window.location.href = linkadd;
+		}
+		function selectCustomer(value) {
+			var linkadd = "/chooseCustomer/" + value;
 			window.location.href = linkadd;
 		}
 	</script>

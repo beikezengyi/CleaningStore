@@ -46,12 +46,11 @@
 					<td>账户余额</td>
 				</tr>
 				<tr th:each="cu : ${allCustomer}">
-					<td><a href="#" th:text="${cu.customerNumber}"
-						onclick="getCustomerInfo(this.innerText)"></a></td>
+					<td th:text="${cu.customerNumber}" />
 					<td ><a href="#" th:text="${cu.customerName}"
 						onclick="selectCustomer(this.innerText)"></a></td>
 					<td th:text="${cu.customerPhoneNumber}" />
-					<td th:text="${cu.customerSexStr}" />
+					<td th:text="${cu.customerSex} =='1'?'男士':(${cu.customerSex}=='2'?'女士':'其他')" />
 					<td th:text="${cu.customerAddress}" />
 					<td th:text="${cu.customerFamilies}" />
 					<td th:text="${cu.accountPayment}" />
@@ -66,10 +65,6 @@
 	<script type="text/javascript"
 		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script>
-		function getCustomerInfo(value) {
-			var linkadd = "/chooseCustomer/" + value;
-			window.location.href = linkadd;
-		}	
 		function selectCustomer(value) {
 			var linkadd = "/chooseCustomer/" + value;
 			window.location.href = linkadd;
